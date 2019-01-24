@@ -1,6 +1,8 @@
 
 #include "response_impl.hpp"
 
+#define RESPONSE_SUCCESS 1
+
 namespace CXXRedis {
 	response::response()
 		:impl_(nullptr)
@@ -52,5 +54,16 @@ namespace CXXRedis {
 	{
 		return impl_->empty();
 	}
-
+	response::operator bool()
+	{
+		return asInteger() == RESPONSE_SUCCESS;
+	}
+	response::operator std::string()
+	{
+		return asString();
+	}
+	response::operator long long()
+	{
+		return asInteger();
+	}
 };

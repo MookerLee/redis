@@ -1,4 +1,5 @@
 #include "client_impl.hpp"
+#include "format.hpp"
 
 namespace CXXRedis 
 {

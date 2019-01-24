@@ -31,6 +31,11 @@ namespace CXXRedis {
 		std::vector<response> asArray() const;
 
 		bool empty() const noexcept;
+
+		operator bool();
+		operator long long();
+		operator std::string();
+
 	private:
 		std::shared_ptr<responseImpl> impl_;
 	};
