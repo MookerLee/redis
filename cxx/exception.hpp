@@ -8,6 +8,12 @@ namespace CXXRedis {
 	class exception : public std::exception {
 
 	public:
+		enum errorCode {
+
+			SOCKET_IO_ERROR,
+			SCOKET_IO_EOF,
+		};
+	public:
 		exception(int errCode, const std::string& errStr)
 			:errCode_(errCode),
 			errStr_(errStr) {}
