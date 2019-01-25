@@ -85,7 +85,7 @@ namespace CXXRedis {
 			return cli_.send(format::formatCmd("INCRBYFLOAT", key, increment)).asString();
 		}
 		template <class... Args>
-		response string::mget(Args... keys)
+		reply string::mget(Args... keys)
 		{
 			return cli_.send(format::formatCmd("MGET", keys...));
 		}

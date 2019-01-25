@@ -1,6 +1,6 @@
 
-#ifndef _REDIS_REPLY_H
-#define _REDIS_REPLY_H
+#ifndef _CXXREDIS_REPLY_HPP_
+#define _CXXREDIS_REPLY_HPP_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -11,15 +11,15 @@
 
 namespace CXXRedis {
 
-	class responseImpl;
+	class replyImpl;
 
-	class response{	
+	class reply{	
 	public:
 
-		response();
-		response(std::shared_ptr<responseImpl> impl);
+		reply();
+		reply(std::shared_ptr<replyImpl> impl);
 
-		~response();
+		~reply();
 
 		bool isArray() const noexcept;
 		bool isInteger() const noexcept;
@@ -28,7 +28,7 @@ namespace CXXRedis {
 		long long asInteger() const;
 		std::string asString() const;
 
-		std::vector<response> asArray() const;
+		std::vector<reply> asArray() const;
 
 		bool empty() const noexcept;
 
@@ -37,12 +37,12 @@ namespace CXXRedis {
 		operator std::string();
 
 	private:
-		std::shared_ptr<responseImpl> impl_;
+		std::shared_ptr<replyImpl> impl_;
 	};
 };
 
 #if !defined(CORE_ONLY_HEADER)
-#include "redis/cxx/impl/response.hpp"
+#include "redis/cxx/impl/reply.hpp"
 #endif
 
 #endif

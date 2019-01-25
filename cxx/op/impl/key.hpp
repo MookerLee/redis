@@ -19,7 +19,7 @@ namespace CXXRedis {
 			return cli_.send(format::formatCmd("DEL", keys...)).asInteger();
 		}
 
-		response key::dump(const std::string& k)
+		reply key::dump(const std::string& k)
 		{
 			return cli_.send(format::formatCmd("DUMP", k));
 		}
@@ -35,11 +35,11 @@ namespace CXXRedis {
 		{
 			return cli_.send(format::formatCmd("EXPIREAT", k, timestamp));
 		}
-		response key::keys(const std::string& pattern)
+		reply key::keys(const std::string& pattern)
 		{
 			return cli_.send(format::formatCmd("KEYS", pattern));
 		}
-		response key::keys()
+		reply key::keys()
 		{
 			return keys("*");
 		}
@@ -99,19 +99,19 @@ namespace CXXRedis {
 		{
 			cli_.send(format::formatCmd("RESTORE", k, ttl, serializedValue));
 		}
-		response key::sort(const std::string& k, const std::string& pattern)
+		reply key::sort(const std::string& k, const std::string& pattern)
 		{
 			return cli_.send(format::formatCmd("SORT", k, pattern));
 		}
-		response key::type(const std::string& k)
+		reply key::type(const std::string& k)
 		{
 			return cli_.send(format::formatCmd("TYPE", k));
 		}
-		response key::scan(int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
+		reply key::scan(int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
 		{
 			return cli_.send(format::formatCmd("SCAN", cursor, "MATCH", matchPattern, "COUNT", count));
 		}
-		response key::object(const std::string& subcmd, const std::string& k)
+		reply key::object(const std::string& subcmd, const std::string& k)
 		{
 			return cli_.send(format::formatCmd("OBJECT", subcmd, k));
 		}

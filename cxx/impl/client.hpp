@@ -18,11 +18,10 @@ namespace CXXRedis
 	void client::close()
 	{
 		send("QUIT");
-		return impl_->close();
 	}
-	response client::send(const std::string& cmd)
+	reply client::send(const std::string& cmd)
 	{
-		return response(impl_->send(cmd));
+		return reply(impl_->send(cmd));
 	}
 	void client::auth(const std::string& pass)
 	{

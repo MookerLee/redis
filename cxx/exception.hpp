@@ -1,4 +1,10 @@
-#pragma once
+
+#ifndef _CXXREDIS_EXCEPTION_HPP_
+#define _CXXREDIS_EXCEPTION_HPP_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+# pragma once
+#endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <exception>
 #include <string>
@@ -12,6 +18,9 @@ namespace CXXRedis {
 
 			SOCKET_IO_ERROR,
 			SCOKET_IO_EOF,
+
+			PROTOCOL_ERROR,
+			FETCH_REPLY_VAL_ERROR,
 		};
 	public:
 		exception(int errCode, const std::string& errStr)
@@ -27,3 +36,5 @@ namespace CXXRedis {
 
 	};
 };
+
+#endif

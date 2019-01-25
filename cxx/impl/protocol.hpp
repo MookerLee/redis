@@ -1,39 +1,24 @@
-#include <string>
-#include <list>
-#include <algorithm>
+#include "protocol_impl.hpp"
+//#include "redis/cxx/reply.hpp"
 
 namespace CXXRedis {
 
-	class protocol {
-		
-	public:
-		static std::string serialize(const std::string& simpleCmd)
-		{
-			std::list<std::string> output;
-			splitCmd(output, simpleCmd);
+	protocol::protocol()
+		:impl_(std::make_shared<protocolImpl>())
+	{
 
-			return "";
-		}
+	}
+	protocol::~protocol()
+	{
 
-		static void splitCmd(std::list<std::string>& output, const std::string& input)
-		{
-			if (input.empty()) return;
+	}
+	std::string protocol::serializeSimpleCommand(const std::string& simpleCommand)
+	{
+		return impl_->serializeSimpleCommand(simpleCommand);
+	}
+	reply protocol::feedBuffer(const std::string& readString)
+	{
+		return reply(impl_->feedBuffer(readString));
+	}
 
-			if(input[0] == ' ') return splitCmd(output, input.substr(1));
-
-			size_t pos = std::string::npos;
-
-			const char find = input[0] == '\"' ? '\"' : ' ';
-			if ((pos = input.find_first_of(find,1)) == std::string::npos)
-			{
-				output.push_back(input);
-				return;
-			}
-
-			output.push_back(input.substr(0,pos + 1));
-
-			return splitCmd(output, input.substr(pos + 1));
-
-		}
-	};
 };

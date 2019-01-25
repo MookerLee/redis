@@ -11,7 +11,7 @@
 namespace CXXRedis {
 
 	class client;
-	class response;
+	class reply;
 
 	namespace op {
 
@@ -54,7 +54,7 @@ namespace CXXRedis {
 			* 如果 key 不存在，那么返回 nil 。
 			* 否则，返回序列化之后的值。
 			*/
-			response dump(const std::string& k);
+			reply dump(const std::string& k);
 
 			/**
 			* 反序列化给定的序列化值，并将它和给定的 key 关联。
@@ -181,8 +181,8 @@ namespace CXXRedis {
 			* 返回值：
 			* 符合给定模式的 key 列表。
 			*/
-			response keys(const std::string& pattern);
-			response keys();
+			reply keys(const std::string& pattern);
+			reply keys();
 			/**
 			* 将 key 原子性地从当前实例传送到目标实例的指定数据库上，一旦传送成功， key 保证会出现在目标实例上，而当前实例上的 key 会被删除。
 			* 这个命令是一个原子操作，它在执行的时候会阻塞进行迁移的两个实例，直到以下任意结果发生：迁移成功，迁移失败，等到超时。
@@ -262,7 +262,7 @@ namespace CXXRedis {
 			* REFCOUNT 和 IDLETIME 返回数字。
 			* ENCODING 返回相应的编码类型。
 			*/
-			response object(const std::string& subcmd, const std::string& k);
+			reply object(const std::string& subcmd, const std::string& k);
 
 			long long objectRefcount(const std::string& k);
 			long long objectIdleTime(const std::string& k);
@@ -343,7 +343,7 @@ namespace CXXRedis {
 			* 没有使用 STORE 参数，返回列表形式的排序结果。
 			* 使用 STORE 参数，返回排序结果的元素数量。
 			*/
-			response sort(const std::string& k, const std::string& pattern);
+			reply sort(const std::string& k, const std::string& pattern);
 
 			/**
 			* 返回 key 所储存的值的类型。
@@ -359,13 +359,13 @@ namespace CXXRedis {
 			* zset (有序集)
 			* hash (哈希表)
 			*/
-			response type(const std::string& k);
+			reply type(const std::string& k);
 
 			/**
 			*
 			* 用于迭代当前数据库中的数据库键。
 			*/
-			response scan(int cursor, const std::string& matchPattern = "*", int count = 10);
+			reply scan(int cursor, const std::string& matchPattern = "*", int count = 10);
 
 		private:
 			client& cli_;

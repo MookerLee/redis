@@ -12,7 +12,7 @@
 namespace CXXRedis {
 
 	class clientImpl;
-	class response;
+	class reply;
 
 	class client {
 
@@ -35,7 +35,7 @@ namespace CXXRedis {
 		* @return_value 命令返回的数据
 		* 如果命令错误抛 CXXRedis::exception 异常
 		*/
-		response send(const std::string& cmd);
+		reply send(const std::string& cmd);
 
 	   /**
 		* @pass redis 密码
