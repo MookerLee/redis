@@ -101,19 +101,15 @@ public:
 	std::shared_ptr<replyImpl> send(const std::string& cmd)
 	{
 		std::string serializeCommand = protocol_.serializeSimpleCommand(cmd);
-		send(serializeCommand.c_str(), serializeCommand.length());
-
-		std::shared_ptr<replyImpl> impl;
-		do 
-		{
-			protocol_.feedBuffer(read());
-
-		} while ((impl = protocol_.biludReplyImpl()) == nullptr);
-
-		protocol_.clearBuffer();
-		return impl;
+		return send(serializeCommand.c_str(), serializeCommand.length());
 	}
 
+	template<class... Args>
+	std::shared_ptr<replyImpl> sendSafeCommand(Args... args)
+	{
+		std::string serializeCommand = protocol_.serializeSafeCommand(args...);
+		return send(serializeCommand.c_str(), serializeCommand.length());
+	}
 	std::string read()
 	{
 		char buffer[1024 * 16];
@@ -134,7 +130,7 @@ public:
 
 private:
 
-	void send(const void* buff, size_t bytes)
+	std::shared_ptr<replyImpl> send(const void* buff, size_t bytes)
 	{
 		size_t sendBytes = 0;
 
@@ -151,6 +147,21 @@ private:
 
 			if (sendBytes == bytes) break;
 		}
+
+		std::shared_ptr<replyImpl> impl;
+		do
+		{
+			protocol_.feedBuffer(read());
+
+		} while ((impl = protocol_.biludReplyImpl()) == nullptr);
+
+		protocol_.clearBuffer();
+
+		if (impl->error())
+			throw exception(exception::errorCode::REPLY_ERROR, impl->asString());
+
+		return impl;
+
 	}
 	
 	uint32_t resolvHost(const std::string& host)

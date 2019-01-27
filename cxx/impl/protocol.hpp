@@ -42,6 +42,25 @@ namespace CXXRedis {
 			return serialize(commands);
 		}
 
+		template<class... Args>
+		std::string serializeSafeCommand(Args... args)
+		{
+			stringList commands;
+			analysisArgs(commands,std::forward<Args>(args)...);
+			return serialize(commands);
+
+		}
+
+		template<class ValueType, class... Args>
+		static void analysisArgs(stringList& commands, ValueType arg, Args... args)
+		{
+			std::string s;
+			s += arg;
+			commands.push_back(s);
+			analysisArgs(commands,args...);
+		}
+		static void analysisArgs(stringList&) {}
+
 		/**
 		* 保存并检测整条数据是否接收完毕
 		*/

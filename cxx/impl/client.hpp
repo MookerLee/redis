@@ -17,26 +17,32 @@ namespace CXXRedis
 	}
 	void client::close()
 	{
-		send("QUIT");
+		sendSafeCommand("QUIT");
 	}
-	reply client::send(const std::string& cmd)
+	reply client::sendSimpleCommand(const std::string& cmd)
 	{
 		return reply(impl_->send(cmd));
 	}
 	void client::auth(const std::string& pass)
 	{
-		send(format::formatCmd("AUTH", pass));
+		sendSafeCommand("AUTH", pass);
 	}
 	std::string client::echo(const std::string& message)
 	{
-		return send(format::formatCmd("ECHO", message)).asString();
+		return sendSafeCommand("ECHO", message).asString();
 	}
 	bool client::ping()
 	{
-		return send("PING").asString() == "PONG";
+		return sendSafeCommand("PING").asString() == "PONG";
 	}
 	void client::select(int db)
 	{
-		send(format::formatCmd("SELECT", db));
+		sendSafeCommand("SELECT", db);
+	}
+
+	template <class... Args>
+	reply client::sendSafeCommand(Args... args)
+	{
+		return reply(impl_->sendSafeCommand(args...));
 	}
 };

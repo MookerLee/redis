@@ -32,6 +32,8 @@ namespace CXXRedis {
 
 		bool empty() const noexcept;
 
+		bool ok() const;
+
 		operator bool();
 		operator long long();
 		operator std::string();

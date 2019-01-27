@@ -68,4 +68,8 @@ namespace CXXRedis {
 	{
 		return asInteger();
 	}
+	bool reply::ok() const
+	{
+		return impl_->ok();
+	}
 };

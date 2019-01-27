@@ -35,7 +35,10 @@ namespace CXXRedis {
 		* @return_value 命令返回的数据
 		* 如果命令错误抛 CXXRedis::exception 异常
 		*/
-		reply send(const std::string& cmd);
+		reply sendSimpleCommand(const std::string& cmd);
+
+		template<class... Args>
+		reply sendSafeCommand(Args... args);
 
 	   /**
 		* @pass redis 密码

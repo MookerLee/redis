@@ -106,6 +106,10 @@ namespace CXXRedis {
 			return replyVal_ == "OK";
 		}
 
+		bool error() const 
+		{
+			return replyType_ == replyType::REPLY_ERROR;
+		}
 	private:
 
 		replyType replyType_;

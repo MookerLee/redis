@@ -17,11 +17,13 @@ namespace CXXRedis {
 		enum errorCode {
 
 			SOCKET_IO_ERROR,
-			SCOKET_IO_EOF,
+			SCOKET_IO_EOF,	
 
-			PROTOCOL_ERROR,
-			REPLY_VAL_NONEXIST,
-			REPLY_VAL_ERROR,
+			PROTOCOL_ERROR,		//协议解析错误
+
+			REPLY_ERROR,		//服务器返回ERROR
+			REPLY_VAL_NONEXIST, //访问的KEY不存在
+			REPLY_VAL_ERROR,	//取值错误
 
 		};
 	public:
