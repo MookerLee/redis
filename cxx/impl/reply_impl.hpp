@@ -6,12 +6,10 @@
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-#include "redis/cxx/exception.hpp"
-#include "redis/cxx/protocol.hpp"
-
 #include <string>
 #include <vector>
 #include <memory>
+
 
 namespace CXXRedis {
 
@@ -19,29 +17,39 @@ namespace CXXRedis {
 	{
 	public:
 
-		replyImpl(protocol::replyType type,const std::string& val)
+		enum replyType
+		{
+			REPLY_UNKNOW,
+			REPLY_STATUS,		//状态回复
+			REPLY_ERROR,		//错误回复
+			REPLY_INTEGER,		//整数回复
+			REPLY_BULK,			//批量回复
+			REPLY_MULTI_BULK,	//多条批量回复
+		};
+
+		typedef std::shared_ptr<replyImpl> replyImplPtr;
+
+		replyImpl(replyType type, const std::string& val) 
 			:replyType_(type),
 			replyVal_(val)
 		{
-			
 
 		}
-		~replyImpl() 
-		{
 			
+
+		bool isArray() const noexcept 
+		{
+			return replyType_ == replyType::REPLY_MULTI_BULK;
 		}
 
-		bool isArray() const noexcept
-		{
-			return replyType_ == protocol::replyType::REPLY_MULTI_BULK;
-		}
 		bool isInteger() const noexcept
 		{
-			return replyType_ == protocol::replyType::REPLY_INTEGER;
+			return replyType_ == replyType::REPLY_INTEGER;
 		}
+
 		bool isString() const noexcept
 		{
-			return replyType_ == protocol::replyType::REPLY_BULK;
+			return replyType_ == replyType::REPLY_BULK;
 		}
 
 		bool empty() const noexcept
@@ -51,35 +59,35 @@ namespace CXXRedis {
 
 		long long asInteger() const
 		{
-			if (!isInteger()) 
+			if (!isInteger())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR, 
+					exception::errorCode::FETCH_REPLY_VAL_ERROR,
 					"not reply integer");
 
 			return std::stoll(replyVal_);
 		}
 		std::string asString() const
 		{
-			if (!isString()) 
+			if (!isString())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR, 
+					exception::errorCode::FETCH_REPLY_VAL_ERROR,
 					"not reply string");
 
 			return replyVal_;
 		}
-		std::vector<std::shared_ptr<replyImpl>> asArray() const
+		std::vector<replyImplPtr> asArray() const
 		{
-			if(!isArray()) 
+			if (!isArray())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR, 
+					exception::errorCode::FETCH_REPLY_VAL_ERROR,
 					"not reply array");
 
 			return replyImplArray_;
 		}
 
-		void pushImpl(std::shared_ptr<replyImpl> impl)
+		void pushImpl(replyImplPtr impl)
 		{
-			if(!isArray())
+			if (!isArray())
 				throw exception(
 					exception::errorCode::FETCH_REPLY_VAL_ERROR,
 					"push replyImpl fail,not array");
@@ -88,21 +96,22 @@ namespace CXXRedis {
 		}
 
 		
-		bool ok() const 
+		bool ok() const
 		{
-			if (replyType_ != protocol::REPLY_STATUS) 
+			if (replyType_ != replyType::REPLY_STATUS)
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR, 
+					exception::errorCode::FETCH_REPLY_VAL_ERROR,
 					"not reply status !");
 
 			return replyVal_ == "OK";
 		}
+
 	private:
 
-		protocol::replyType replyType_;
+		replyType replyType_;
 		std::string replyVal_;
 
-		std::vector<std::shared_ptr<replyImpl>> replyImplArray_;
+		std::vector<replyImplPtr> replyImplArray_;
 	};
 };
 

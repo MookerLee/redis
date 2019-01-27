@@ -40,6 +40,8 @@ namespace CXXRedis {
 	}
 	std::vector<reply> reply::asArray() const
 	{
+		impl_->pushImpl(nullptr);
+
 		std::vector<reply> replyArray;
 
 		std::vector<std::shared_ptr<replyImpl>> responseImplArray = impl_->asArray();
