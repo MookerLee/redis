@@ -20,7 +20,9 @@ namespace CXXRedis {
 			SCOKET_IO_EOF,
 
 			PROTOCOL_ERROR,
-			FETCH_REPLY_VAL_ERROR,
+			REPLY_VAL_NONEXIST,
+			REPLY_VAL_ERROR,
+
 		};
 	public:
 		exception(int errCode, const std::string& errStr)

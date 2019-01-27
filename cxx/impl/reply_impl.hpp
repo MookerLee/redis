@@ -61,7 +61,7 @@ namespace CXXRedis {
 		{
 			if (!isInteger())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR,
+					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply integer");
 
 			return std::stoll(replyVal_);
@@ -70,7 +70,7 @@ namespace CXXRedis {
 		{
 			if (!isString())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR,
+					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply string");
 
 			return replyVal_;
@@ -79,7 +79,7 @@ namespace CXXRedis {
 		{
 			if (!isArray())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR,
+					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply array");
 
 			return replyImplArray_;
@@ -89,7 +89,7 @@ namespace CXXRedis {
 		{
 			if (!isArray())
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR,
+					exception::errorCode::REPLY_VAL_ERROR,
 					"push replyImpl fail,not array");
 
 			replyImplArray_.push_back(impl);
@@ -100,7 +100,7 @@ namespace CXXRedis {
 		{
 			if (replyType_ != replyType::REPLY_STATUS)
 				throw exception(
-					exception::errorCode::FETCH_REPLY_VAL_ERROR,
+					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply status !");
 
 			return replyVal_ == "OK";

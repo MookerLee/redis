@@ -57,37 +57,21 @@ namespace CXXRedis {
 		std::shared_ptr<replyImpl> biludReplyImpl()
 		{
 			
-
 			// 如果最后不是\r\n 一定没有读完
 			if (buffer_.find_last_of("\r\n") == std::string::npos) return nullptr;
 
 			stringList commands;
 			splitSimpleCommand(commands, buffer_, "\r\n");
 
-			protocol::replyType type = analysisReplyType(buffer_);
+			if (commands.front()[0] == '$' && commands.front().substr(1) == "-1")
+				throw exception(exception::errorCode::REPLY_VAL_NONEXIST, "reply val non-exist");
 
-			switch (type)
-			{			
-			case protocol::replyType::REPLY_STATUS:
-			case protocol::replyType::REPLY_ERROR:
-			case protocol::replyType::REPLY_INTEGER:
-			{
-				return buildSingleReply(commands.front());
-			}
-			break;		
-			case protocol::replyType::REPLY_BULK: //string
-			{
-				return buildStringReply(commands);
-			}
-			break;			
-			case protocol::replyType::REPLY_MULTI_BULK: //array
-			{
-				return buildArrayReply(commands);
-			}
-			break;
-			default:
-				break;
-			}
+			std::shared_ptr<replyImpl> impl;
+
+			if ((impl = buildSingleReply(commands))) return impl;
+			if ((impl = buildStringReply(commands))) return impl;
+			if ((impl = buildArrayReply(commands))) return impl;
+			
 
 			return nullptr;
 		}
@@ -113,20 +97,22 @@ namespace CXXRedis {
 
 	private:
 		
-		std::shared_ptr<replyImpl> buildSingleReply(const std::string& replyString)
+		std::shared_ptr<replyImpl> buildSingleReply(const stringList& commands)
 		{
 			/************************************************************************/
 			/*   ":0\r\n" 和 ":1000\r\n"												*/
 			/************************************************************************/
 
-			protocol::replyType type = analysisReplyType(replyString);
+			if (commands.size() != 1) return nullptr;
+
+			protocol::replyType type = analysisReplyType(commands.front());
 			switch (type)
 			{
 			case protocol::REPLY_STATUS:
 			case protocol::REPLY_ERROR:
 			case protocol::REPLY_INTEGER:
 			{
-				std::string val = replyString.substr(1);
+				std::string val = commands.front().substr(1);
 				return std::make_shared<replyImpl>(transformReplyType(type), val);
 			}
 		
@@ -174,40 +160,28 @@ namespace CXXRedis {
 			
 			for (auto it = std::next(commands.begin()); it != commands.end(); ++it)
 			{
-				protocol::replyType subtype = analysisReplyType(*it);
+				std::shared_ptr<replyImpl> relpySub;
 
-				switch (subtype)
+				if ((relpySub = buildSingleReply({ *it })))
 				{
-				case protocol::REPLY_STATUS:
-				case protocol::REPLY_ERROR:
-				case protocol::REPLY_INTEGER:
-				{
-					replyArray->pushImpl(buildSingleReply(*it));
+					replyArray->pushImpl(relpySub);
 					buildCount++;
 				}
-				break;
-				case protocol::REPLY_BULK:
+				else if ((relpySub = buildStringReply({ *it,*std::next(it) })))
 				{
-					auto nex = std::next(it);
-					if (nex == commands.end()) return nullptr;
-
-					replyArray->pushImpl(buildStringReply({ *it,*nex }));
-
+					replyArray->pushImpl(relpySub);
 					buildCount++;
-					it = nex;
-					
-				}
-				break;
 
-				default:
-					return nullptr;
+					it = std::next(it);
 				}
+				else return nullptr;			
 			}
 
 			if (buildCount == arraySzie) return replyArray;
 
 			return nullptr;
 		}
+
 
 		replyImpl::replyType transformReplyType(protocol::replyType type)
 		{
