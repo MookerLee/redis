@@ -1,7 +1,7 @@
 #include "client_impl.hpp"
 #include "format.hpp"
 
-namespace CXXRedis 
+namespace redis 
 {
 	client::client():impl_(std::make_shared<clientImpl>())
 	{

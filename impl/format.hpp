@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace CXXRedis {
+namespace redis {
 
 	class format {
 

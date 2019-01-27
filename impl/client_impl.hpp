@@ -52,13 +52,13 @@ int errnox = EINPROGRESS;
 
 #define THROW_SOCKET_IO_ERROR { SETERRNO; throw exception(exception::errorCode::SOCKET_IO_ERROR, strerror(errno));}
 
-#include "redis/cxx/exception.hpp"
-#include "redis/cxx/reply.hpp"
-#include "redis/cxx/impl/protocol.hpp"
+#include "redis/exception.hpp"
+#include "redis/reply.hpp"
+#include "redis/impl/protocol.hpp"
 
 #include "reply_impl.hpp"
 
-namespace CXXRedis {
+namespace redis {
 
 class clientImpl {
 
@@ -78,12 +78,7 @@ public:
 	}
 	~clientImpl() 
 	{
-		#ifdef _WIN32
-		WSACleanup();
-		closesocket(fd_);
-		#else
-		close(fd_);
-		#endif
+		close();
 	}
 
 	void connect(const std::string& ip, int port) 
@@ -128,6 +123,18 @@ public:
 		return std::string(buffer, n);
 	}
 
+	void close()
+	{
+		if (fd_ == -1) return;
+
+#ifdef _WIN32
+		WSACleanup();
+		closesocket(fd_);
+#else
+		close(fd_);
+#endif
+		fd_ = -1;
+	}
 private:
 
 	std::shared_ptr<replyImpl> send(const void* buff, size_t bytes)

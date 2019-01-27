@@ -11,7 +11,7 @@
 #include <memory>
 
 
-namespace CXXRedis {
+namespace redis {
 
 	class replyImpl 
 	{

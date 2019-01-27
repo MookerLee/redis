@@ -13,9 +13,9 @@
 #include <cassert>
 #include <memory>
 
-#include "redis/cxx/impl/reply_impl.hpp"
+#include "redis/impl/reply_impl.hpp"
 
-namespace CXXRedis {
+namespace redis {
 
 	class replyImpl;
 

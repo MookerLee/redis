@@ -9,7 +9,7 @@
 
 #include <memory>
 
-namespace CXXRedis {
+namespace redis {
 
 	class clientImpl;
 	class reply;

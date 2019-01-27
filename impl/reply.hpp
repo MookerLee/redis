@@ -3,7 +3,7 @@
 
 #define RESPONSE_SUCCESS 1
 
-namespace CXXRedis {
+namespace redis {
 	reply::reply()
 		:impl_(nullptr)
 	{

@@ -9,7 +9,7 @@
 #include <memory>
 
 
-namespace CXXRedis {
+namespace redis {
 
 	class replyImpl;
 
@@ -44,7 +44,7 @@ namespace CXXRedis {
 };
 
 #if !defined(CORE_ONLY_HEADER)
-#include "redis/cxx/impl/reply.hpp"
+#include "redis/impl/reply.hpp"
 #endif
 
 #endif

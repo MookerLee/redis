@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace CXXRedis {
+namespace redis {
 
 	class client;
 	class reply;

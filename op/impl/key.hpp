@@ -1,7 +1,7 @@
 
-#include "redis/cxx/client.hpp"
+#include "redis/client.hpp"
 
-namespace CXXRedis {
+namespace redis {
 	namespace op {
 
 		key::key(client& cli)

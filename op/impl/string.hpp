@@ -1,8 +1,8 @@
 
-#include "redis/cxx/impl/format.hpp"
-#include "redis/cxx/client.hpp"
+#include "redis/impl/format.hpp"
+#include "redis/client.hpp"
 
-namespace CXXRedis {
+namespace redis {
 	namespace op {
 
 		string::string(client& cli)

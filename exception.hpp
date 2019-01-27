@@ -9,7 +9,7 @@
 #include <exception>
 #include <string>
 
-namespace CXXRedis {
+namespace redis {
 
 	class exception : public std::exception {
 
