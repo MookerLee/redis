@@ -105,6 +105,20 @@ public:
 		std::string serializeCommand = protocol_.serializeSafeCommand(args...);
 		return send(serializeCommand.c_str(), serializeCommand.length());
 	}
+	template<class... Args>
+	reply sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs) 
+	{
+		std::string serializeCommand = protocol_.serializePairsCommand(cmd, pairs...);
+		return send(serializeCommand.c_str(), serializeCommand.length());
+	}
+
+	template<class... Args>
+	reply sendPairsCommand(const std::string& cmd,const std::string& key, std::initializer_list<Args>... pairs)
+	{
+		std::string serializeCommand = protocol_.serializePairsCommand(cmd, key, pairs...);
+		return send(serializeCommand.c_str(), serializeCommand.length());
+	}
+
 	std::string read()
 	{
 		char buffer[1024 * 16];
@@ -165,7 +179,7 @@ private:
 		protocol_.clearBuffer();
 
 		if (impl->error())
-			throw exception(exception::errorCode::REPLY_ERROR, impl->asString());
+			throw exception(exception::errorCode::REPLY_ERROR, impl->errorString());
 
 		return impl;
 

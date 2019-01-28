@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "redis/impl/reply_impl.hpp"
+#include "redis/impl/string_convert.hpp"
 
 namespace redis {
 
@@ -35,6 +36,8 @@ namespace redis {
 		};
 
 	public:
+
+
 		std::string serializeSimpleCommand(const std::string& simpleCmd)
 		{
 			stringList commands;
@@ -54,13 +57,44 @@ namespace redis {
 		template<class ValueType, class... Args>
 		static void analysisArgs(stringList& commands, ValueType arg, Args... args)
 		{
-			std::string s;
-			s += arg;
-			commands.push_back(s);
+			commands.push_back(stringConvert::toString(arg));
 			analysisArgs(commands,args...);
 		}
 		static void analysisArgs(stringList&) {}
 
+
+		template<class... Args>
+		std::string serializePairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs)
+		{
+			stringList commands;
+			commands.push_back(cmd);
+			analysisPairs(commands, pairs...);
+			return serialize(commands);
+		}
+
+		template <class ValueType, class... Args>
+		static void analysisPairs(stringList& commands, ValueType pair, std::initializer_list<Args>... pairs)
+		{
+
+			for (auto it = pair.begin(); it != pair.end(); ++it)
+				commands.push_back(stringConvert::toString(*it));
+			
+			analysisPairs(commands, pairs...);
+		}
+		static void analysisPairs(stringList&) {}
+
+
+		template<class... Args>
+		std::string serializePairsCommand(const std::string& cmd,const std::string& key,  std::initializer_list<Args>... pairs)
+		{
+			stringList commands;
+
+			commands.push_back(cmd);
+			commands.push_back(key);
+
+			analysisPairs(commands, pairs...);
+			return serialize(commands);
+		}
 		/**
 		* 保存并检测整条数据是否接收完毕
 		*/

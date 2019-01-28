@@ -110,6 +110,16 @@ namespace redis {
 		{
 			return replyType_ == replyType::REPLY_ERROR;
 		}
+
+		std::string errorString() const
+		{
+			if (replyType_ != replyType::REPLY_ERROR)
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply error !");
+
+			return replyVal_;
+		}
 	private:
 
 		replyType replyType_;

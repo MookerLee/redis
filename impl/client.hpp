@@ -1,5 +1,4 @@
 #include "client_impl.hpp"
-#include "format.hpp"
 
 namespace redis 
 {
@@ -44,5 +43,15 @@ namespace redis
 	reply client::sendSafeCommand(Args... args)
 	{
 		return reply(impl_->sendSafeCommand(args...));
+	}
+	template<class... Args>
+	reply client::sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs)
+	{
+		return reply(impl_->sendPairsCommand(cmd, pairs...));
+	}
+	template<class... Args>
+	reply client::sendPairsCommand(const std::string& cmd, const std::string& key, std::initializer_list<Args>... pairs)
+	{
+		return reply(impl_->sendPairsCommand(cmd,key, pairs...));
 	}
 };

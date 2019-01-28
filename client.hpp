@@ -40,6 +40,12 @@ namespace redis {
 		template<class... Args>
 		reply sendSafeCommand(Args... args);
 
+		template<class... Args>
+		reply sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs);
+
+		template<class... Args>
+		reply sendPairsCommand(const std::string& cmd, const std::string& key, std::initializer_list<Args>... pairs);
+
 	   /**
 		* @pass redis 密码
 		* 抛出异常密码验证失败正常返回表示成功

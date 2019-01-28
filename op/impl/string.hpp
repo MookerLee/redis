@@ -1,5 +1,4 @@
 
-#include "redis/impl/format.hpp"
 #include "redis/client.hpp"
 
 namespace redis {
@@ -92,12 +91,12 @@ namespace redis {
 		template <class... Args>
 		void string::mset(std::initializer_list<Args>... pairs)
 		{
-			cli_.send(format::formatPairs("MSET", pairs...));
+			cli_.sendPairsCommand("MSET", pairs...);
 		}
 		template <class... Args>
 		bool string::msetNx(std::initializer_list<Args>... pairs)
 		{
-			return cli_.send(format::formatPairs("MSETNX", pairs...));
+			return cli_.sendPairsCommand("MSETNX", pairs...);
 		}
 		void string::psetEx(const std::string& key, time_t milliseconds, const std::string& value)
 		{
