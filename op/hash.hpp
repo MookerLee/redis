@@ -169,7 +169,7 @@ namespace redis {
 			*
 			* 用于迭代当前数据库中的数据库键。
 			*/
-			reply scan(int cursor, const std::string& matchPattern = "*", int count = 10);
+			reply scan(const std::string& key, int cursor = 0, const std::string& matchPattern = "*", int count = 10);
 
 			/**
 			* 返回哈希表 key 中， 与给定域 field 相关联的值的字符串长度（string length）。

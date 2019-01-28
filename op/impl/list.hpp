@@ -1,3 +1,4 @@
+#include "redis/client.hpp"
 namespace redis {
 	namespace op {
 		list::list(client& cli)

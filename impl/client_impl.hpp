@@ -1,4 +1,3 @@
-#pragma once
 
 #ifndef _REDIS_CLIENT_IMPL_H_
 #define _REDIS_CLIENT_IMPL_H_

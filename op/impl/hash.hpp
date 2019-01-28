@@ -66,9 +66,9 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("HSETNX", key);
 		}
-		reply hash::scan(int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
+		reply hash::scan(const std::string& key,int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
 		{
-			return cli_.sendSafeCommand("HSCAN", cursor, "MATCH", matchPattern, "COUNT", count);
+			return cli_.sendSafeCommand("HSCAN", key, cursor, "MATCH", matchPattern, "COUNT", count);
 		}
 		long long hash::strLen(const std::string& key, const std::string& field)
 		{

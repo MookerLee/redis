@@ -1,3 +1,11 @@
+
+#ifndef _REDIS_STRING_CONVERT_HPP_
+#define _REDIS_STRING_CONVERT_HPP_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+# pragma once
+#endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
 #include <string>
 namespace redis{
 
@@ -32,4 +40,6 @@ namespace redis{
 			return val;
 		}
 	};
-}
+};
+
+#endif

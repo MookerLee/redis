@@ -227,6 +227,11 @@ namespace redis {
 
 					it = std::next(it);
 				}
+				else if ((relpySub = buildArrayReply(stringList(it, commands.end()))))
+				{
+					replyArray->pushImpl(relpySub);
+					buildCount++;
+				}
 				else return nullptr;			
 			}
 
