@@ -1,4 +1,0 @@
-﻿  main.cpp
-e:\code\server\core\redis\impl\protocol.hpp(209): warning C4244: “初始化”: 从“__int64”转换到“std::size_t”，可能丢失数据
-  redis.vcxproj -> E:\code\server\core\redis\win\Debug\redis.exe
-  redis.vcxproj -> E:\code\server\core\redis\win\Debug\redis.pdb (Full PDB)
