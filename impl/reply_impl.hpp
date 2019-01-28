@@ -98,7 +98,7 @@ namespace redis {
 		
 		bool ok() const
 		{
-			if (replyType_ != replyType::REPLY_STATUS)
+			if (isStatus() == false)
 				throw exception(
 					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply status !");
@@ -119,6 +119,59 @@ namespace redis {
 					"not reply error !");
 
 			return replyVal_;
+		}
+		bool isStatus() const noexcept
+		{
+			return replyType_ == replyType::REPLY_STATUS;
+		}
+		bool typeSet() const 
+		{
+			if(!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+
+			return replyVal_ == "set";
+		}
+		bool typeList() const 
+		{
+			if (!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+			return replyVal_ == "list";
+		}
+		bool typeHash()const
+		{
+			if (!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+			return replyVal_ == "hash";
+		}
+		bool typeNone()const
+		{
+			if (!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+			return replyVal_ == "none";
+		}
+		bool typeString()const
+		{
+			if (!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+			return replyVal_ == "string";
+		}
+		bool typeZset()const
+		{
+			if (!isStatus())
+				throw exception(
+					exception::errorCode::REPLY_VAL_ERROR,
+					"not reply status !");
+			return replyVal_ == "zset";
 		}
 	private:
 

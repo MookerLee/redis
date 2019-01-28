@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+#define DEFAULT_RREDIS_PROT 6379
+
 namespace redis {
 
 	class clientImpl;
@@ -26,7 +28,7 @@ namespace redis {
 		* @port redis的端口
 		* 如果连接失败会抛 CXXRedis::exception 异常
 		*/
-		void connect(const std::string& ip, int port);
+		void connect(const std::string& ip = "127.0.0.1", int port = DEFAULT_RREDIS_PROT);
 	   /**
 		* 关闭与redis_server 的连接
 		*/

@@ -24,6 +24,7 @@ namespace redis {
 		bool isArray() const noexcept;
 		bool isInteger() const noexcept;
 		bool isString() const noexcept;
+		bool isStatus() const noexcept;
 
 		long long asInteger() const;
 		std::string asString() const;
@@ -33,6 +34,14 @@ namespace redis {
 		bool empty() const noexcept;
 
 		bool ok() const;
+
+		bool typeSet() const;
+		bool typeString() const;
+		bool typeNone() const;
+
+		bool typeList() const;
+		bool typeZset() const;
+		bool typeHash() const;
 
 		operator bool();
 		operator long long();

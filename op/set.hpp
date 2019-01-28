@@ -145,7 +145,7 @@ namespace redis {
 			* 只提供 key 参数时，返回一个元素；如果集合为空，返回 nil 。
 			* 如果提供了 count 参数，那么返回一个数组；如果集合为空，返回空数组。
 			*/
-			reply randMember(const std::string& key,size_t count = 0xffffffffffffffff);
+			reply randMember(const std::string& key,size_t count = 0xffffffff);
 
 			/*
 			* 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略。

@@ -64,7 +64,7 @@ namespace redis {
 		}
 		reply hash::vals(const std::string& key)
 		{
-			return cli_.sendSafeCommand("HSETNX", key);
+			return cli_.sendSafeCommand("HVALS", key);
 		}
 		reply hash::scan(const std::string& key,int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
 		{

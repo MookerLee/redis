@@ -72,4 +72,32 @@ namespace redis {
 	{
 		return impl_->ok();
 	}
+	bool reply::isStatus() const noexcept
+	{
+		return impl_->isStatus();
+	}
+	bool reply::typeSet() const
+	{
+		return impl_->typeSet();
+	}
+	bool reply::typeList()const
+	{
+		return impl_->typeList();
+	}
+	bool reply::typeNone()const
+	{
+		return impl_->typeNone();
+	}
+	bool reply::typeString()const
+	{
+		return impl_->typeString();
+	}
+	bool reply::typeZset()const
+	{
+		return impl_->typeZset();
+	}
+	bool reply::typeHash()const
+	{
+		return impl_->typeHash();
+	}
 };

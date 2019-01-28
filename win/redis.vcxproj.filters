@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="redis">
+      <UniqueIdentifier>{9d6a1105-5b82-47b1-a468-f3eb2e350132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\impl">
+      <UniqueIdentifier>{06cadcc2-0a30-4146-8806-dc77032e160f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\op">
+      <UniqueIdentifier>{b85431cd-4d07-41b7-98fb-a1c489c71ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\op\impl">
+      <UniqueIdentifier>{5675b8d4-0573-47bf-809e-b08557aa6ade}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\client.hpp">
+      <Filter>redis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\exception.hpp">
+      <Filter>redis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\reply.hpp">
+      <Filter>redis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\client.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\client_impl.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\protocol.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\reply.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\reply_impl.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\string_convert.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\hash.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\key.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\list.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\set.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\sroted_set.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\string.hpp">
+      <Filter>redis\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\hash.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\key.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\list.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\set.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\sroted_set.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\string.hpp">
+      <Filter>redis\op\impl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>redis</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

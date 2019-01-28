@@ -213,24 +213,26 @@ namespace redis {
 			
 			for (auto it = std::next(commands.begin()); it != commands.end(); ++it)
 			{
-				std::shared_ptr<replyImpl> relpySub;
+				std::shared_ptr<replyImpl> replySub;
 
-				if ((relpySub = buildSingleReply({ *it })))
+				if ((replySub = buildSingleReply({ *it })))
 				{
-					replyArray->pushImpl(relpySub);
+					replyArray->pushImpl(replySub);
 					buildCount++;
 				}
-				else if ((relpySub = buildStringReply({ *it,*std::next(it) })))
+				else if ((replySub = buildStringReply({ *it,*std::next(it) })))
 				{
-					replyArray->pushImpl(relpySub);
+					replyArray->pushImpl(replySub);
 					buildCount++;
 
 					it = std::next(it);
 				}
-				else if ((relpySub = buildArrayReply(stringList(it, commands.end()))))
+				else if ((replySub = buildArrayReply(stringList(it, commands.end()))))
 				{
-					replyArray->pushImpl(relpySub);
+					replyArray->pushImpl(replySub);
 					buildCount++;
+
+					break;
 				}
 				else return nullptr;			
 			}
