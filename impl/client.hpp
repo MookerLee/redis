@@ -20,7 +20,7 @@ namespace redis
 	}
 	reply client::sendSimpleCommand(const std::string& cmd)
 	{
-		return reply(impl_->send(cmd));
+		return reply(impl_->sendSimpleCommand(cmd));
 	}
 	void client::auth(const std::string& pass)
 	{
@@ -40,18 +40,14 @@ namespace redis
 	}
 
 	template <class... Args>
-	reply client::sendSafeCommand(Args... args)
+	reply client::sendSafeCommand(const std::string& cmd,Args... args)
 	{
-		return reply(impl_->sendSafeCommand(args...));
+		return reply(impl_->sendSafeCommand(cmd,args...));
 	}
-	template<class... Args>
-	reply client::sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs)
+
+
+	reply client::sendListCommand(const std::list<std::string>& commands)
 	{
-		return reply(impl_->sendPairsCommand(cmd, pairs...));
-	}
-	template<class... Args>
-	reply client::sendPairsCommand(const std::string& cmd, const std::string& key, std::initializer_list<Args>... pairs)
-	{
-		return reply(impl_->sendPairsCommand(cmd,key, pairs...));
+		return reply(impl_->sendListCommand(commands));
 	}
 };

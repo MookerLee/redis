@@ -10,83 +10,89 @@ namespace redis {
 		{
 			
 		}
-		template<class... Args>
-		reply list::blpop(Args... args)
+		reply list::blpop(const std::list<std::string>& keys)
 		{
-			return cli_.sendSafeCommand("BLPOP", args...);
+			std::list<std::string> commands{ "BLPOP" };
+			commands.insert(commands.end(), keys.begin(), keys.end());
+			return cli_.sendListCommand(commands);
 		}
-		template<class... Args>
-		reply list::brpop(Args... args)
+		reply list::brpop(const std::list<std::string>& keys)
 		{
-			return cli_.sendSafeCommand("BRPOP", args...);
+			std::list<std::string> commands{ "BRPOP" };
+			commands.insert(commands.end(), keys.begin(), keys.end());
+			return cli_.sendListCommand(commands);
 		}
 
-		reply list::brpopLpush(const std::string& source, const std::string& destination, time_t timeout)
+		reply list::brpoplpush(const std::string& source, const std::string& destination, time_t timeout)
 		{
 			return cli_.sendSafeCommand("BRPOPLPUSH", source, destination, timeout);
 		}
-		std::string list::index(const std::string& key, size_t idx)
+		std::string list::lindex(const std::string& key, size_t idx)
 		{
 			return cli_.sendSafeCommand("LINDEX", key, idx).asString();
 		}
-		long long list::insertBefore(const std::string& key, const std::string& pivot, const std::string& value)
+		long long list::linsertBefore(const std::string& key, const std::string& pivot, const std::string& value)
 		{
-			return cli_.sendSafeCommand("LINSERT", key, "BEFORE", pivot, value).asInteger();
+			return cli_.sendSafeCommand("LINSERT", key, "BEFORE", pivot, value);
 		}
-		long long list::insertAfter(const std::string& key, const std::string& pivot, const std::string& value)
+		long long list::linsertAfter(const std::string& key, const std::string& pivot, const std::string& value)
 		{
-			return cli_.sendSafeCommand("LINSERT", key, "AFTER", pivot, value).asInteger();
+			return cli_.sendSafeCommand("LINSERT", key, "AFTER", pivot, value);
 		}
-		long long list::len(const std::string& key)
+		long long list::llen(const std::string& key)
 		{
-			return cli_.sendSafeCommand("LLEN", key).asInteger();
+			return cli_.sendSafeCommand("LLEN", key);
 		}
-		std::string list::pop(const std::string& key)
+		std::string list::lpop(const std::string& key)
 		{
-			return cli_.sendSafeCommand("LPOP", key).asString();
+			return cli_.sendSafeCommand("LPOP", key);
 		}
-		template<class... Args>
-		long long list::push(const std::string& key, Args... values)
+
+		long long list::lpush(const std::string& key, const std::list<std::string>& values)
 		{
-			return cli_.sendSafeCommand("LPUSH", key,values...).asInteger();
+			std::list<std::string> commands{ "LPUSH" ,key};
+			commands.insert(commands.end(), values.begin(), values.end());
+			return cli_.sendListCommand(commands);
 		}
-		template<class... Args>
-		long long list::pushX(const std::string& key, Args... values)
+		long long list::lpushx(const std::string& key, const std::list<std::string>& values)
 		{
-			return cli_.sendSafeCommand("LPUSHX", key, values...).asInteger();
+			std::list<std::string> commands{ "LPUSHX" ,key };
+			commands.insert(commands.end(), values.begin(), values.end());
+			return cli_.sendListCommand(commands);
 		}
-		reply list::range(const std::string& key, size_t start /* = 0 */, size_t stop /* = -1 */)
+		reply list::lrange(const std::string& key, size_t start /* = 0 */, size_t stop /* = -1 */)
 		{
 			return cli_.sendSafeCommand("LRANGE", key, start,stop);
 		}
-		long long list::remove(const std::string& key, size_t count, const std::string& value)
+		long long list::lrem(const std::string& key, size_t count, const std::string& value)
 		{
-			return cli_.sendSafeCommand("LREM", key, count, value).asInteger();
+			return cli_.sendSafeCommand("LREM", key, count, value);
 		}
-		void list::set(const std::string& key, size_t index, const std::string& value)
+		void list::lset(const std::string& key, size_t index, const std::string& value)
 		{
 			cli_.sendSafeCommand("LSET", key, index, value);
 		}
-		void list::trim(const std::string& key, size_t start /* = 0 */, size_t stop /* = -1 */)
+		void list::ltrim(const std::string& key, size_t start /* = 0 */, size_t stop /* = -1 */)
 		{
 			cli_.sendSafeCommand("LTRIM", key, start, stop);
 		}
 		std::string list::rpop(const std::string& key)
 		{
-			return cli_.sendSafeCommand("RPOP", key).asString();
+			return cli_.sendSafeCommand("RPOP", key);
 		}
-		std::string list::rpopLpush(const std::string& source, const std::string& destination)
+		std::string list::rpoplpush(const std::string& source, const std::string& destination)
 		{
-			return cli_.sendSafeCommand("RPOPLPUSH", source, destination).asString();
+			return cli_.sendSafeCommand("RPOPLPUSH", source, destination);
 		}
-		template<class... Args>
-		long long list::rpush(const std::string& key, Args... values)
+		long long list::rpush(const std::string& key, const std::list<std::string>& values)
 		{
-			return cli_.sendSafeCommand("RPUSH", key, values...).asInteger();
+			std::list<std::string> commands{ "RPUSH" ,key };
+			commands.insert(commands.end(), values.begin(), values.end());
+			return cli_.sendListCommand(commands);
 		}
-		long long list::rpushX(const std::string& key, const std::string& value)
+		long long list::rpushx(const std::string& key, const std::string& value)
 		{
-			return cli_.sendSafeCommand("RPUSHX", key, value).asInteger();
+			return cli_.sendSafeCommand("RPUSHX", key, value);
 		}
 	}
 };

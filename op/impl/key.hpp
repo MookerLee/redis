@@ -13,10 +13,12 @@ namespace redis {
 		{
 
 		}
-		template <class... Args>
-		long long key::del(Args... keys)
+		long long key::del(const std::list<std::string>& keys)
 		{
-			return cli_.sendSafeCommand("DEL", keys...).asInteger();
+			std::list<std::string> commands{"DEL"};
+			commands.insert(commands.end(), keys.begin(), keys.end());
+
+			return cli_.sendListCommand(commands);
 		}
 
 		reply key::dump(const std::string& k)
@@ -53,15 +55,15 @@ namespace redis {
 		}
 		long long key::objectRefcount(const std::string& k)
 		{
-			return object("REFCOUNT", k).asInteger();
+			return object("REFCOUNT", k);
 		}
 		long long key::objectIdleTime(const std::string& k)
 		{
-			return object("IDLETIME", k).asInteger();
+			return object("IDLETIME", k);
 		}
 		std::string key::objectEncoding(const std::string& k)
 		{
-			return object("ENCODING", k).asString();
+			return object("ENCODING", k);
 		}
 		bool key::persist(const std::string& k)
 		{
@@ -77,21 +79,21 @@ namespace redis {
 		}
 		long long key::ttl(const std::string& k)
 		{
-			return cli_.sendSafeCommand("TTL", k).asInteger();
+			return cli_.sendSafeCommand("TTL", k);
 		}
 		long long key::pttl(const std::string& k)
 		{
-			return cli_.sendSafeCommand("PTTL", k).asInteger();
+			return cli_.sendSafeCommand("PTTL", k);
 		}
-		std::string key::randomKey()
+		std::string key::randomkey()
 		{
-			return cli_.sendSafeCommand("RANDOMKEY").asString();
+			return cli_.sendSafeCommand("RANDOMKEY");
 		}
 		void key::rename(const std::string& k, const std::string& newkey)
 		{
 			cli_.sendSafeCommand("RENAME", k, newkey);
 		}
-		bool key::renameEx(const std::string& k, const std::string& newkey)
+		bool key::renamenx(const std::string& k, const std::string& newkey)
 		{
 			return cli_.sendSafeCommand("RENAMENX", k, newkey);
 		}

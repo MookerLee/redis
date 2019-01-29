@@ -1,25 +1,22 @@
 #include <iostream>
-
-#include "redis/client.hpp"
-#include "redis/op/set.hpp"
-#include "redis/op/string.hpp"
-#include "redis/op/hash.hpp"
-#include "redis/op/key.hpp"
-
-
+#include <redis/redis.hpp>
 
 int main()
 {
 	try
 	{
 		redis::client cli;
-		cli.connect("192.168.1.30", 6379);
+		cli.connect(/*"192.168.1.30", 6379*/);
 
-		redis::op::key k(cli);
-		k.type("ff");
+		cli.sendSimpleCommand("INFO");
+		redis::op::string k(cli);
+		k.get("ff");
 
-		redis::op::hash h(cli);
-		h.vals("gg");
+		//redis::op::hash h(cli);
+		//h.hvals("gg");
+
+		redis::op::srotedSet st(cli);
+		st.zscan("kk");
 	}
 	catch (const std::exception& e)
 	{

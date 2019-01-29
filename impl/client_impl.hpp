@@ -92,32 +92,24 @@ public:
 		if (::connect(fd_, (sockaddr*)&addr, sizeof(sockaddr_in)) != SOCKET_SUCCESS) THROW_SOCKET_IO_ERROR;
 	}
 
-	std::shared_ptr<replyImpl> send(const std::string& cmd)
+	std::shared_ptr<replyImpl> sendSimpleCommand(const std::string& cmd)
 	{
-		std::string serializeCommand = protocol_.serializeSimpleCommand(cmd);
-		return send(serializeCommand.c_str(), serializeCommand.length());
+		std::string serializeCommand = protocol::sender::serializeSimpleCommand(cmd);
+		return sendCommand(serializeCommand.c_str(), serializeCommand.length());
 	}
 
 	template<class... Args>
-	std::shared_ptr<replyImpl> sendSafeCommand(Args... args)
+	std::shared_ptr<replyImpl> sendSafeCommand(const std::string& cmd, Args... args)
 	{
-		std::string serializeCommand = protocol_.serializeSafeCommand(args...);
-		return send(serializeCommand.c_str(), serializeCommand.length());
-	}
-	template<class... Args>
-	reply sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs) 
-	{
-		std::string serializeCommand = protocol_.serializePairsCommand(cmd, pairs...);
-		return send(serializeCommand.c_str(), serializeCommand.length());
+		std::string serializeCommand = protocol::sender::serializeSafeCommand(cmd,args...);
+		return sendCommand(serializeCommand.c_str(), serializeCommand.length());
 	}
 
-	template<class... Args>
-	reply sendPairsCommand(const std::string& cmd,const std::string& key, std::initializer_list<Args>... pairs)
+	reply sendListCommand(const std::list<std::string>& commands)
 	{
-		std::string serializeCommand = protocol_.serializePairsCommand(cmd, key, pairs...);
-		return send(serializeCommand.c_str(), serializeCommand.length());
+		std::string serializeCommand = protocol::sender::serializeListCommand(commands);
+		return sendCommand(serializeCommand.c_str(), serializeCommand.length());
 	}
-
 	std::string read()
 	{
 		char buffer[1024 * 16];
@@ -150,7 +142,7 @@ public:
 	}
 private:
 
-	std::shared_ptr<replyImpl> send(const void* buff, size_t bytes)
+	std::shared_ptr<replyImpl> sendCommand(const void* buff, size_t bytes)
 	{
 		size_t sendBytes = 0;
 

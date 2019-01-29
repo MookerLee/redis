@@ -17,40 +17,37 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("APPEND", key, appStr).asInteger();
 		}
-		long long string::bitCount(const std::string& key, int start /* = 0 */, int end /* = -1 */)
+		long long string::bitcount(const std::string& key, int start /* = 0 */, int end /* = -1 */)
 		{
 			return cli_.sendSafeCommand("BITCOUNT", key, start,end).asInteger();
 		}
-		template  <class... Args>
-		long long string::bitOP(const std::string& subCmd, const std::string& destkey, Args... keys)
+		long long string::bitop(const std::string& subCmd, const std::string& destkey, const std::list<std::string>& keys)
 		{
-			return cli_.sendSafeCommand("BITOP", subCmd, destkey, keys...).asInteger();
+			std::list<std::string> cmds{ "BITOP" ,subCmd ,destkey };
+			cmds.insert(cmds.end(), keys.begin(), keys.end());
+			return cli_.sendListCommand(cmds).asInteger();
 		}
-		template <class... Args>
-		long long string::bitOPAnd(const std::string& destkey, Args... keys)
+		long long string::bitopAnd(const std::string& destkey, const std::list<std::string>& keys)
 		{
-			return bitOP("AND", destkey, keys...);
+			return bitop("AND", destkey, keys);
 		}
-
-		template <class... Args>
-		long long string::bitOPOr(const std::string& destkey, Args... keys)
+		long long string::bitopOr(const std::string& destkey, const std::list<std::string>& keys)
 		{
-			return bitOP("OR", destkey, keys...);
+			return bitop("OR", destkey, keys);
 		}
-		template <class... Args>
-		long long string::bitOPXor(const std::string& destkey, Args... keys)
+		long long string::bitopXor(const std::string& destkey, const std::list<std::string>& keys)
 		{
-			return bitOP("XOR", destkey, keys...);
+			return bitop("XOR", destkey, keys);
 		}
-		long long string::bitOPNot(const std::string& destkey,const std::string& key)
+		long long string::bitopNot(const std::string& destkey,const std::string& key)
 		{		
-			return bitOP("NOT", destkey, key);	
+			return bitop("NOT", destkey, { key });
 		}
 		long long string::decr(const std::string& key)
 		{
 			return cli_.sendSafeCommand("DECR", key).asInteger();
 		}
-		long long string::decrBy(const std::string& key, long long decrement)
+		long long string::decrby(const std::string& key, long long decrement)
 		{
 			return cli_.sendSafeCommand("DECRBY", key, decrement).asInteger();
 		}
@@ -58,16 +55,16 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("GET", key).asString();
 		}
-		long long string::getBit(const std::string& key, int offset)
+		long long string::getbit(const std::string& key, int offset)
 		{
 			return cli_.sendSafeCommand("GETBIT", key, offset).asInteger();
 		}
-		std::string string::getRange(const std::string& key, int start, int end)
+		std::string string::getrange(const std::string& key, int start, int end)
 		{
 			return cli_.sendSafeCommand("GETRANGE", key, start, end).asString();
 		}
 
-		std::string string::getSet(const std::string& key, const std::string& newvalue)
+		std::string string::getset(const std::string& key, const std::string& newvalue)
 		{
 			return cli_.sendSafeCommand("GETSET", key, newvalue).asString();
 		}
@@ -75,30 +72,45 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("INCR", key).asInteger();
 		}
-		long long string::incrBy(const std::string& key, long long increment)
+		long long string::incrby(const std::string& key, long long increment)
 		{
 			return cli_.sendSafeCommand("INCRBY", key, increment).asInteger();
 		}
-		std::string string::incrByFloat(const std::string& key, double increment)
+		std::string string::incrbyfloat(const std::string& key, double increment)
 		{
 			return cli_.sendSafeCommand("INCRBYFLOAT", key, increment).asString();
 		}
-		template <class... Args>
-		reply string::mget(Args... keys)
+
+		reply string::mget(const std::list<std::string>& keys)
 		{
-			return cli_.sendSafeCommand("MGET", keys...);
+			std::list<std::string> commands{ "MGET" };
+			commands.insert(commands.end(), keys.begin(), keys.end());
+			return cli_.sendListCommand(commands);
 		}
-		template <class... Args>
-		void string::mset(std::initializer_list<Args>... pairs)
+		void string::mset(const std::multimap<std::string, std::string>& keyValues)
 		{
-			cli_.sendPairsCommand("MSET", pairs...);
+			std::list<std::string> commands{ "MSET" };
+
+			for (const auto& kv : keyValues)
+			{
+				commands.push_back(kv.first);
+				commands.push_back(kv.second);
+			}
+			cli_.sendListCommand(commands);
 		}
-		template <class... Args>
-		bool string::msetNx(std::initializer_list<Args>... pairs)
+
+		bool string::msetnx(const std::multimap<std::string, std::string>& keyValues)
 		{
-			return cli_.sendPairsCommand("MSETNX", pairs...);
+			std::list<std::string> commands{ "MSETNX" };
+
+			for (const auto& kv : keyValues)
+			{
+				commands.push_back(kv.first);
+				commands.push_back(kv.second);
+			}
+			return cli_.sendListCommand(commands);
 		}
-		void string::psetEx(const std::string& key, time_t milliseconds, const std::string& value)
+		void string::psetex(const std::string& key, time_t milliseconds, const std::string& value)
 		{
 			cli_.sendSafeCommand("PSETEX", key, milliseconds, value);
 		}
@@ -106,23 +118,23 @@ namespace redis {
 		{
 			cli_.sendSafeCommand("SET", key, value);
 		}
-		long long string::setBit(const std::string& key, int offset, int bit)
+		long long string::setbit(const std::string& key, int offset, int bit)
 		{
 			return cli_.sendSafeCommand("SETBIT", key, offset,bit).asInteger();
 		}
-		void string::setEx(const std::string& key, time_t seconds, const std::string& value) 
+		void string::setex(const std::string& key, time_t seconds, const std::string& value) 
 		{
 			cli_.sendSafeCommand("SETEX", key, seconds, value);
 		}
-		bool string::setNx(const std::string& key, const std::string& value)
+		bool string::setnx(const std::string& key, const std::string& value)
 		{
 			return cli_.sendSafeCommand("SETNX", key, value);
 		}
-		long long string::setRange(const std::string& key, int offset, const std::string& value)
+		long long string::setrange(const std::string& key, int offset, const std::string& value)
 		{
 			return cli_.sendSafeCommand("SETRANGE", key, offset, value).asInteger();
 		}
-		long long string::strLen(const std::string& key) 
+		long long string::strlen(const std::string& key) 
 		{
 			return cli_.sendSafeCommand("STRLEN", key).asInteger();
 		}

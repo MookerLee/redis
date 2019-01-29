@@ -39,6 +39,10 @@ namespace redis{
 		{
 			return val;
 		}
+		static std::string toString(size_t val)
+		{
+			return std::to_string(val);
+		}
 	};
 };
 

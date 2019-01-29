@@ -44,8 +44,7 @@ namespace redis {
 			* 否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 			* 最后一个参数写时间
 			*/
-			template<class... Args>
-			reply blpop(Args... args);
+			reply blpop(const std::list<std::string>& keys);
 
 			/**
 			* BRPOP 是列表的阻塞式(blocking)弹出原语。
@@ -59,8 +58,7 @@ namespace redis {
 			* 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 			* 最后一个参数写时间
 			*/
-			template<class... Args>
-			reply brpop(Args... args);
+			reply brpop(const std::list<std::string>& keys);
 
 			/**
 			* BRPOPLPUSH 是 RPOPLPUSH 的阻塞版本，当给定列表 source 不为空时， BRPOPLPUSH 的表现和 RPOPLPUSH 一样。
@@ -72,7 +70,7 @@ namespace redis {
 			* 假如在指定时间内没有任何元素被弹出，则返回一个 nil 和等待时长。
 			* 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素的值，第二个元素是等待时长。
 			*/
-			reply brpopLpush(const std::string& source, const std::string& destination, time_t timeout = 0);
+			reply brpoplpush(const std::string& source, const std::string& destination, time_t timeout = 0);
 
 			/**
 			* 返回列表 key 中，下标为 index 的元素。
@@ -87,7 +85,7 @@ namespace redis {
 			* 列表中下标为 index 的元素。
 			* 如果 index 参数的值不在列表的区间范围内(out of range)，返回 nil 。
 			*/
-			std::string index(const std::string& key, size_t idx);
+			std::string lindex(const std::string& key, size_t idx);
 
 			/**
 			* 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后。
@@ -102,8 +100,8 @@ namespace redis {
 			* 如果没有找到 pivot ，返回 -1 。
 			* 如果 key 不存在或为空列表，返回 0 。
 			*/
-			long long insertBefore(const std::string& key, const std::string& pivot, const std::string& value);
-			long long insertAfter(const std::string& key, const std::string& pivot, const std::string& value);
+			long long linsertBefore(const std::string& key, const std::string& pivot, const std::string& value);
+			long long linsertAfter(const std::string& key, const std::string& pivot, const std::string& value);
 
 			/**
 			* 返回列表 key 的长度。
@@ -113,7 +111,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：列表 key 的长度。
 			*/
-			long long len(const std::string& key);
+			long long llen(const std::string& key);
 
 			/**
 			* 移除并返回列表 key 的头元素。
@@ -123,7 +121,7 @@ namespace redis {
 			* 列表的头元素。
 			* 当 key 不存在时，返回 nil 。
 			*/
-			std::string pop(const std::string& key);
+			std::string lpop(const std::string& key);
 
 			/**
 			* 将一个或多个值 value 插入到列表 key 的表头
@@ -137,8 +135,7 @@ namespace redis {
 			* 返回值：
 			* 执行 LPUSH 命令后，列表的长度。
 			*/
-			template<class... Args>
-			long long push(const std::string& key, Args... values);
+			long long lpush(const std::string& key, const std::list<std::string>& values);
 
 			/*
 			* 将值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表。
@@ -148,8 +145,7 @@ namespace redis {
 			* 返回值：
 			* LPUSHX 命令执行之后，表的长度。
 			*/
-			template<class... Args>
-			long long pushX(const std::string& key, Args... values);
+			long long lpushx(const std::string& key, const std::list<std::string>& values);
 
 			/**
 			* 返回列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 指定。
@@ -169,7 +165,7 @@ namespace redis {
 			* 返回值:
 			* 一个列表，包含指定区间内的元素。
 			*/
-			reply range(const std::string& key, size_t start = 0, size_t stop = -1);
+			reply lrange(const std::string& key, size_t start = 0, size_t stop = -1);
 
 			/**
 			* 根据参数 count 的值，移除列表中与参数 value 相等的元素。
@@ -184,7 +180,7 @@ namespace redis {
 			* 被移除元素的数量。
 			* 因为不存在的 key 被视作空表(empty list)，所以当 key 不存在时， LREM 命令总是返回 0 。
 			*/
-			long long remove(const std::string& key, size_t count, const std::string& value);
+			long long lrem(const std::string& key, size_t count, const std::string& value);
 
 			/*
 			* 将列表 key 下标为 index 的元素的值设置为 value 。
@@ -196,7 +192,7 @@ namespace redis {
 			* 返回值：
 			* 操作成功返回 ok ，否则返回错误信息。
 			*/
-			void set(const std::string& key, size_t index, const std::string& value);
+			void lset(const std::string& key, size_t index, const std::string& value);
 
 			/*
 			* 对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
@@ -225,7 +221,7 @@ namespace redis {
 			* 返回值:
 			* 命令执行成功时，返回 ok 。
 			*/
-			void trim(const std::string& key, size_t start = 0, size_t stop = -1);
+			void ltrim(const std::string& key, size_t start = 0, size_t stop = -1);
 
 			/*
 			* 移除并返回列表 key 的尾元素。
@@ -251,7 +247,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：被弹出的元素。
 			*/
-			std::string rpopLpush(const std::string& source, const std::string& destination);
+			std::string rpoplpush(const std::string& source, const std::string& destination);
 
 			/*
 			* 将一个或多个值 value 插入到列表 key 的表尾(最右边)。
@@ -262,8 +258,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：执行 RPUSH 操作后，表的长度。
 			*/
-			template<class... Args>
-			long long rpush(const std::string& key, Args... values);
+			long long rpush(const std::string& key, const std::list<std::string>& values);
 
 			/*
 			* 将值 value 插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表。
@@ -272,7 +267,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：RPUSHX 命令执行之后，表的长度。
 			*/
-			long long rpushX(const std::string& key, const std::string& value);
+			long long rpushx(const std::string& key, const std::string& value);
 		private:
 			client& cli_;
 		};

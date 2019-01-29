@@ -7,6 +7,7 @@
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <string>
+#include <map>
 
 namespace redis {
 
@@ -38,7 +39,7 @@ namespace redis {
 			* 时间复杂度：O(N)
 			* 返回值：被设置为 1 的位的数量。
 			*/
-			long long bitCount(const std::string& key, int start = 0, int end = -1);
+			long long bitcount(const std::string& key, int start = 0, int end = -1);
 
 			/**
 			* 对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。
@@ -54,19 +55,12 @@ namespace redis {
 			* 时间复杂度：O(N)
 			* 返回值：保存到 destkey 的字符串的长度，和输入 key 中最长的字符串长度相等。
 			*/
-			template <class... Args>
-			long long bitOP(const std::string& subCmd, const std::string& destkey, Args... keys);
+			long long bitop(const std::string& subCmd, const std::string& destkey,const std::list<std::string>& keys);
 
-			template <class... Args>
-			long long bitOPAnd(const std::string& destkey, Args... keys);
-
-			template <class... Args>
-			long long bitOPOr(const std::string& destkey, Args... keys);
-
-			template <class... Args>
-			long long bitOPXor(const std::string& destkey, Args... keys);
-
-			long long bitOPNot(const std::string& destkey, const std::string& key);
+			long long bitopAnd(const std::string& destkey, const std::list<std::string>& keys);
+			long long bitopOr(const std::string& destkey, const std::list<std::string>& keys);
+			long long bitopXor(const std::string& destkey, const std::list<std::string>& keys);
+			long long bitopNot(const std::string& destkey, const std::string& key);
 
 			/**
 			* 对 key 所储存的字符串值，获取指定偏移量上的位(bit)。
@@ -75,7 +69,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：字符串值指定偏移量上的位(bit)。
 			*/
-			long long getBit(const std::string& key, int offset);
+			long long getbit(const std::string& key, int offset);
 
 			/**
 			* 对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。
@@ -86,7 +80,7 @@ namespace redis {
 			* 返回值：指定偏移量原来储存的位
 			* 可用版本：>= 2.2.0
 			*/
-			long long setBit(const std::string& key, int offset, int bit);
+			long long setbit(const std::string& key, int offset, int bit);
 			/**
 			* 将 key 中储存的数字值减一。
 			* 如果 key 不存在，那么 key 的值会先被初始化为 0 ，然后再执行 DECR 操作。
@@ -107,7 +101,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：减去 decrement 之后， key 的值。
 			*/
-			long long decrBy(const std::string& key, long long decrement);
+			long long decrby(const std::string& key, long long decrement);
 			
 			/**
 			* 将 key 中储存的数字值增一。
@@ -129,7 +123,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：加上 increment 之后， key 的值。
 			*/
-			long long incrBy(const std::string& key, long long increment);
+			long long incrby(const std::string& key, long long increment);
 
 			/**
 			* 为 key 中所储存的值加上浮点数增量 increment 。
@@ -152,7 +146,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：执行命令之后 key 的值。
 			*/
-			std::string incrByFloat(const std::string& key, double increment);
+			std::string incrbyfloat(const std::string& key, double increment);
 
 			/**
 			* 返回 key 所关联的字符串值。
@@ -173,8 +167,7 @@ namespace redis {
 			* 时间复杂度:O(N) , N 为给定 key 的数量。
 			* 返回值：一个包含所有给定 key 的值的列表。
 			*/
-			template <class... Args>
-			reply mget(Args... keys);
+			reply mget(const std::list<std::string>& keys);
 
 			/**
 			* 返回 key 中字符串值的子字符串，字符串的截取范围由 start 和 end 两个偏移量决定(包括 start 和 end 在内)。
@@ -191,7 +184,7 @@ namespace redis {
 			*
 			* 返回值：截取得出的子字符串。
 			*/
-			std::string getRange(const std::string& key,int start = 0,int end = -1);
+			std::string getrange(const std::string& key,int start = 0,int end = -1);
 
 			/**
 			* 将给定 key 的值设为 value ，并返回 key 的旧值(old value)。
@@ -201,7 +194,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：返回给定 key 的旧值。当 key 没有旧值时，也即是， key 不存在时，返回 nil 。
 			*/
-			std::string getSet(const std::string& key, const std::string& newvalue);
+			std::string getset(const std::string& key, const std::string& newvalue);
 
 			/**
 			* 同时设置一个或多个 key-value 对。
@@ -216,8 +209,7 @@ namespace redis {
 			* 时间复杂度：O(N)， N 为要设置的 key 数量。
 			* 返回值：总是返回 OK (因为 MSET 不可能失败)
 			*/
-			template <class... Args>
-			void mset(std::initializer_list<Args>... pairs);
+			void mset(const std::multimap<std::string,std::string>& keyValues);
 
 			/**
 			* 同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。
@@ -229,8 +221,7 @@ namespace redis {
 			* 时间复杂度：O(N)， N 为要设置的 key 的数量。
 			* 返回值：当所有 key 都成功设置，返回 1 。如果所有给定 key 都设置失败(至少有一个 key 已经存在)，那么返回 0 。
 			*/
-			template <class... Args>
-			bool msetNx(std::initializer_list<Args>... pairs);
+			bool msetnx(const std::multimap<std::string, std::string>& keyValues);
 
 			/**
 			* 这个命令和 SETEX 命令相似，但它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位。
@@ -239,7 +230,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：设置成功时返回 OK 。
 			*/
-			void psetEx(const std::string& key, time_t milliseconds, const std::string& value);
+			void psetex(const std::string& key, time_t milliseconds, const std::string& value);
 
 			/**
 			* 将字符串值 value 关联到 key 。
@@ -273,7 +264,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：设置成功时返回 OK 。当 seconds 参数不合法时，返回一个错误。
 			*/
-			void setEx(const std::string& key, time_t seconds, const std::string& value);
+			void setex(const std::string& key, time_t seconds, const std::string& value);
 
 			/**
 			* 将 key 的值设为 value ，当且仅当 key 不存在。
@@ -283,7 +274,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：设置成功，返回 1 。设置失败，返回 0 。
 			*/
-			bool setNx(const std::string& key, const std::string& value);
+			bool setnx(const std::string& key, const std::string& value);
 
 			/**
 			* 用 value 参数覆写(overwrite)给定 key 所储存的字符串值，从偏移量 offset 开始。
@@ -312,7 +303,7 @@ namespace redis {
 			*
 			* 返回值：被 SETRANGE 修改之后，字符串的长度。
 			*/
-			long long setRange(const std::string& key,int offset, const std::string& value);
+			long long setrange(const std::string& key,int offset, const std::string& value);
 
 			/**
 			* 返回 key 所储存的字符串值的长度。
@@ -321,7 +312,7 @@ namespace redis {
 			* 复杂度：O(1)
 			* 返回值：字符串值的长度。当 key 不存在时，返回 0 。
 			*/
-			long long strLen(const std::string& key);
+			long long strlen(const std::string& key);
 
 		private:
 			client& cli_;

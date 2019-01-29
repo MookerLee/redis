@@ -32,3 +32,4 @@
 *.app
 /win/Debug
 /win/.vs
+/win/*.db

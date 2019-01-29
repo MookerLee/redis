@@ -11,66 +11,74 @@ namespace redis {
 		{
 
 		}
-		template <class...Args>
-		long long hash::del(const std::string& key, Args... fields)
+		long long hash::hdel(const std::string& key, const std::list<std::string>&  fields)
 		{
-			return cli_.sendSafeCommand("HDEL", key, fields...).asInteger();
+			std::list<std::string> commands{ "HDEL", key };
+			commands.insert(commands.end(), fields.begin(), fields.end());
+			return cli_.sendListCommand(commands);
 		}
-		bool hash::exist(const std::string& key, const std::string& field)
+		bool hash::hexist(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HEXIST", key, field);
 		}
-		std::string hash::get(const std::string& key, const std::string& field)
+		std::string hash::hget(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HGET", key, field);
 		}
-		reply hash::getAll(const std::string& key)
+		reply hash::hgetall(const std::string& key)
 		{
 			return cli_.sendSafeCommand("HGETALL", key);
 		}
-		long long hash::incrBy(const std::string& key, const std::string& field, long long increment)
+		long long hash::hincrby(const std::string& key, const std::string& field, long long increment)
 		{
 			return cli_.sendSafeCommand("HINCRBY", key, field, increment);
 		}
-		std::string hash::incrByFloat(const std::string& key, const std::string& field, double increment)
+		std::string hash::hincrbyfloat(const std::string& key, const std::string& field, double increment)
 		{
 			return cli_.sendSafeCommand("HINCRBYFLOAT", key, field, increment);
 		}
-		reply hash::keys(const std::string& key)
+		reply hash::hkeys(const std::string& key)
 		{
 			return cli_.sendSafeCommand("HKEYS", key);
 		}
-		long long hash::len(const std::string& key)
+		long long hash::hlen(const std::string& key)
 		{
 			return cli_.sendSafeCommand("HLEN", key);
 		}
-		template<class... Args>
-		reply hash::mget(const std::string& key, Args... fields)
+		reply hash::hmget(const std::string& key, const std::list<std::string>&  fields)
 		{
-			return cli_.sendSafeCommand("HMGET", key,fields...);
+			std::list<std::string> commands{ "HMGET", key };
+			commands.insert(commands.end(), fields.begin(), fields.end());
+			return cli_.sendListCommand(commands);
 		}
-		template <class... Args>
-		reply hash::mset(const std::string& key, std::initializer_list<Args>... pairs)
+		reply hash::hmset(const std::string& key, const std::multimap<std::string,std::string>& fieldValues)
 		{
-			return cli_.sendPairsCommand( "HMSET", key, pairs...);
+			std::list<std::string> commands{ "HMSET", key };
+
+			for (const auto& fv : fieldValues)
+			{
+				commands.push_back(fv.first);
+				commands.push_back(fv.second);
+			}
+			return cli_.sendListCommand(commands);
 		}
-		long long hash::set(const std::string& key, const std::string& field, const std::string& value)
+		long long hash::hset(const std::string& key, const std::string& field, const std::string& value)
 		{
-			return cli_.sendSafeCommand("HSET", key, field, value).asInteger();
+			return cli_.sendSafeCommand("HSET", key, field, value);
 		}
-		bool hash::setNx(const std::string& key, const std::string& field, const std::string& value)
+		bool hash::hsetnx(const std::string& key, const std::string& field, const std::string& value)
 		{
 			return cli_.sendSafeCommand("HSETNX", key, field, value);
 		}
-		reply hash::vals(const std::string& key)
+		reply hash::hvals(const std::string& key)
 		{
 			return cli_.sendSafeCommand("HVALS", key);
 		}
-		reply hash::scan(const std::string& key,int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
+		reply hash::hscan(const std::string& key,int cursor, const std::string& matchPattern /* = "*" */, int count /* = 10 */)
 		{
 			return cli_.sendSafeCommand("HSCAN", key, cursor, "MATCH", matchPattern, "COUNT", count);
 		}
-		long long hash::strLen(const std::string& key, const std::string& field)
+		long long hash::hstrlen(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HSTRLEN", key, field);
 		}

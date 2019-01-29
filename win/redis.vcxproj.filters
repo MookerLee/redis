@@ -78,6 +78,12 @@
     <ClInclude Include="..\op\impl\string.hpp">
       <Filter>redis\op\impl</Filter>
     </ClInclude>
+    <ClInclude Include="..\redis.hpp">
+      <Filter>redis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\protocol_sender.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

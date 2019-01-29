@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <string>
+#include <list>
 
 #define DEFAULT_RREDIS_PROT 6379
 
@@ -41,13 +42,10 @@ namespace redis {
 		reply sendSimpleCommand(const std::string& cmd);
 
 		template<class... Args>
-		reply sendSafeCommand(Args... args);
+		reply sendSafeCommand(const std::string& cmd,Args... args);
 
-		template<class... Args>
-		reply sendPairsCommand(const std::string& cmd, std::initializer_list<Args>... pairs);
+		reply sendListCommand(const std::list<std::string>& commands);
 
-		template<class... Args>
-		reply sendPairsCommand(const std::string& cmd, const std::string& key, std::initializer_list<Args>... pairs);
 
 	   /**
 		* @pass redis ÃÜÂë

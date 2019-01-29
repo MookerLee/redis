@@ -33,8 +33,7 @@ namespace redis {
 			*
 			* 返回值：被删除 key 的数量。
 			*/
-			template<class... Args>
-			long long del(Args... keys);
+			long long del(const std::list<std::string>& keys);
 			/**
 			* 序列化给定 key ，并返回被序列化的值，使用 RESTORE 命令可以将这个值反序列化为 Redis 键。
 			*
@@ -304,7 +303,7 @@ namespace redis {
 			* 当数据库不为空时，返回一个 key 。
 			* 当数据库为空时，返回 nil 。
 			*/
-			std::string randomKey();
+			std::string randomkey();
 			/**
 			* 将 key 改名为 newkey 。
 			* 当 key 和 newkey 相同，或者 key 不存在时，返回一个错误。
@@ -321,7 +320,7 @@ namespace redis {
 			* 时间复杂度：O(1)
 			* 返回值：修改成功时，返回 1 。如果 newkey 已经存在，返回 0 。
 			*/
-			bool renameEx(const std::string& k, const std::string& newkey);
+			bool renamenx(const std::string& k, const std::string& newkey);
 			/**
 			*
 			* 返回或保存给定列表、集合、有序集合 key 中经过排序的元素。

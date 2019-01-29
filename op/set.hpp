@@ -29,8 +29,7 @@ namespace redis {
 			* 返回值:
 			* 被添加到集合中的新元素的数量，不包括被忽略的元素。
 			*/
-			template<class... Args>
-			long long add(const std::string& key, Args... members);
+			long long sadd(const std::string& key, const std::list<std::string>& members);
 
 			/*
 			* 返回集合 key 的基数(集合中元素的数量)。
@@ -40,7 +39,7 @@ namespace redis {
 			* 集合的基数。
 			* 当 key 不存在时，返回 0 。
 			*/
-			long long card(const std::string& key);
+			long long scard(const std::string& key);
 
 			/*
 			* 返回一个集合的全部成员，该集合是所有给定集合之间的差集。
@@ -49,8 +48,7 @@ namespace redis {
 			* 时间复杂度:O(N)， N 是所有给定集合的成员数量之和。
 			* 返回值: 一个包含差集成员的列表。
 			*/
-			template<class... Args>
-			reply diff(Args... keys);
+			reply set::sdiff(const std::list<std::string>& keys);
 
 			/*
 			* 这个命令的作用和 SDIFF 类似，但它将结果保存到 destination 集合，而不是简单地返回结果集。
@@ -60,8 +58,7 @@ namespace redis {
 			* 时间复杂度:O(N)， N 是所有给定集合的成员数量之和。
 			* 返回值:结果集中的元素数量。
 			*/
-			template<class... Args>
-			long long diffStore(const std::string& destination, Args... keys);
+			long long sdiffstore(const std::string& destination, const std::list<std::string>& keys);
 
 			/*
 			* 返回一个集合的全部成员，该集合是所有给定集合的交集。
@@ -71,8 +68,7 @@ namespace redis {
 			* 时间复杂度: O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的个数。
 			* 返回值: 交集成员的列表。
 			*/
-			template<class... Args>
-			reply inter(Args... keys);
+			reply sinter(const std::list<std::string>& keys);
 
 			/*
 			* 这个命令类似于 SINTER 命令，但它将结果保存到 destination 集合，而不是简单地返回结果集。
@@ -82,8 +78,7 @@ namespace redis {
 			* 时间复杂度:O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的个数。
 			* 返回值:结果集中的成员数量。
 			*/
-			template<class... Args>
-			long long interStore(const std::string& destination, Args... keys);
+			long long sinterstore(const std::string& destination, const std::list<std::string>& keys);
 
 			/*
 			* 判断 member 元素是否集合 key 的成员。
@@ -93,7 +88,7 @@ namespace redis {
 			* 如果 member 元素是集合的成员，返回 1 。
 			* 如果 member 元素不是集合的成员，或 key 不存在，返回 0 。
 			*/
-			bool isMember(const std::string& key, const std::string& member);
+			bool sismember(const std::string& key, const std::string& member);
 
 			/*
 			* 返回集合 key 中的所有成员。
@@ -102,7 +97,7 @@ namespace redis {
 			* 时间复杂度:O(N)， N 为集合的基数。
 			* 返回值:集合中的所有成员。
 			*/
-			reply members(const std::string& key);
+			reply smembers(const std::string& key);
 
 			/*
 			* 将 member 元素从 source 集合移动到 destination 集合。
@@ -117,7 +112,7 @@ namespace redis {
 			* 如果 member 元素被成功移除，返回 1 。
 			* 如果 member 元素不是 source 集合的成员，并且没有任何操作对 destination 集合执行，那么返回 0 。
 			*/
-			bool move(const std::string& source, const std::string& destination, const std::string& member);
+			bool smove(const std::string& source, const std::string& destination, const std::string& member);
 
 			/*
 			* 移除并返回集合中的一个随机元素。
@@ -128,7 +123,7 @@ namespace redis {
 			* 被移除的随机元素。
 			* 当 key 不存在或 key 是空集时，返回 nil 。
 			*/
-			std::string pop(const std::string& key);
+			std::string spop(const std::string& key);
 
 			/*
 			* 如果命令执行时，只提供了 key 参数，那么返回集合中的一个随机元素。
@@ -145,7 +140,7 @@ namespace redis {
 			* 只提供 key 参数时，返回一个元素；如果集合为空，返回 nil 。
 			* 如果提供了 count 参数，那么返回一个数组；如果集合为空，返回空数组。
 			*/
-			reply randMember(const std::string& key,size_t count = 0xffffffff);
+			reply srandmember(const std::string& key,size_t count = 0xffffffff);
 
 			/*
 			* 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略。
@@ -154,8 +149,7 @@ namespace redis {
 			* 时间复杂度:O(N)， N 为给定 member 元素的数量。
 			* 返回值:被成功移除的元素的数量，不包括被忽略的元素。
 			*/
-			template<class... Args>
-			long long remove(const std::string& key, Args... members);
+			long long srem(const std::string& key, const std::list<std::string>& members);
 
 			/*
 			* 返回一个集合的全部成员，该集合是所有给定集合的并集。
@@ -164,8 +158,7 @@ namespace redis {
 			* 时间复杂度:O(N)， N 是所有给定集合的成员数量之和。
 			* 返回值:并集成员的列表。
 			*/
-			template<class... Args>
-			reply sunion(Args... keys);
+			reply sunion(const std::list<std::string>& keys);
 
 			/*
 			* 这个命令类似于 SUNION 命令，但它将结果保存到 destination 集合，而不是简单地返回结果集。
@@ -175,14 +168,13 @@ namespace redis {
 			* 时间复杂度:O(N)， N 是所有给定集合的成员数量之和。
 			* 返回值:结果集中的元素数量。
 			*/
-			template<class... Args>
-			reply sunionStore(const std::string& destination, Args... keys);
+			reply sunionstore(const std::string& destination, const std::list<std::string>& keys);
 
 			/**
 			*
 			* 用于迭代当前数据库中的数据库键。
 			*/
-			reply scan(const std::string& key, int cursor = 0, const std::string& matchPattern = "*", int count = 10);
+			reply sscan(const std::string& key, int cursor = 0, const std::string& matchPattern = "*", int count = 10);
 		private:
 			client& cli_;
 		};

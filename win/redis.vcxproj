@@ -151,6 +151,7 @@
     <ClInclude Include="..\impl\client.hpp" />
     <ClInclude Include="..\impl\client_impl.hpp" />
     <ClInclude Include="..\impl\protocol.hpp" />
+    <ClInclude Include="..\impl\protocol_sender.hpp" />
     <ClInclude Include="..\impl\reply.hpp" />
     <ClInclude Include="..\impl\reply_impl.hpp" />
     <ClInclude Include="..\impl\string_convert.hpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\op\set.hpp" />
     <ClInclude Include="..\op\sroted_set.hpp" />
     <ClInclude Include="..\op\string.hpp" />
+    <ClInclude Include="..\redis.hpp" />
     <ClInclude Include="..\reply.hpp" />
   </ItemGroup>
   <ItemGroup>
