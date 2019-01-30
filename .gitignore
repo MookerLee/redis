@@ -33,3 +33,5 @@
 /win/Debug
 /win/.vs
 /win/*.db
+/win/x64
+/win/*.opendb
