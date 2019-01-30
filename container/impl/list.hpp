@@ -1,6 +1,6 @@
 #include "redis/client.hpp"
 namespace redis {
-	namespace op {
+	namespace container {
 		list::list(client& cli)
 			:cli_(cli)
 		{

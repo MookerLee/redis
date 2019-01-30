@@ -2,7 +2,7 @@
 #include "redis/client.hpp"
 
 namespace redis{
-	namespace op {
+	namespace container {
 		set::set(client& cli)
 			:cli_(cli)
 		{

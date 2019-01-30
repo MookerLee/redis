@@ -14,7 +14,7 @@ namespace redis {
 	class client;
 	class reply;
 
-	namespace op {
+	namespace container {
 
 		class string {
 

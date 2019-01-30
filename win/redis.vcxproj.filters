@@ -7,11 +7,17 @@
     <Filter Include="redis\impl">
       <UniqueIdentifier>{06cadcc2-0a30-4146-8806-dc77032e160f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="redis\op">
+    <Filter Include="redis\container">
       <UniqueIdentifier>{b85431cd-4d07-41b7-98fb-a1c489c71ee5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="redis\op\impl">
+    <Filter Include="redis\container\impl">
       <UniqueIdentifier>{5675b8d4-0573-47bf-809e-b08557aa6ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\advance">
+      <UniqueIdentifier>{227c75ee-f07c-4899-85a0-921b728f3d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\advance\impl">
+      <UniqueIdentifier>{74ab02ee-d025-417e-bfd5-7dfb2882b1d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,46 +49,58 @@
       <Filter>redis\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\op\hash.hpp">
-      <Filter>redis\op</Filter>
+      <Filter>redis\container</Filter>
     </ClInclude>
     <ClInclude Include="..\op\key.hpp">
-      <Filter>redis\op</Filter>
+      <Filter>redis\container</Filter>
     </ClInclude>
     <ClInclude Include="..\op\list.hpp">
-      <Filter>redis\op</Filter>
+      <Filter>redis\container</Filter>
     </ClInclude>
     <ClInclude Include="..\op\set.hpp">
-      <Filter>redis\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\sroted_set.hpp">
-      <Filter>redis\op</Filter>
+      <Filter>redis\container</Filter>
     </ClInclude>
     <ClInclude Include="..\op\string.hpp">
-      <Filter>redis\op</Filter>
+      <Filter>redis\container</Filter>
     </ClInclude>
     <ClInclude Include="..\op\impl\hash.hpp">
-      <Filter>redis\op\impl</Filter>
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\op\impl\key.hpp">
-      <Filter>redis\op\impl</Filter>
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\op\impl\list.hpp">
-      <Filter>redis\op\impl</Filter>
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\op\impl\set.hpp">
-      <Filter>redis\op\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\sroted_set.hpp">
-      <Filter>redis\op\impl</Filter>
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\op\impl\string.hpp">
-      <Filter>redis\op\impl</Filter>
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\redis.hpp">
       <Filter>redis</Filter>
     </ClInclude>
     <ClInclude Include="..\impl\protocol_sender.hpp">
       <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\impl\srotedset.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op\srotedset.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\server.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\server.hpp">
+      <Filter>redis\advance\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\script.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\script.hpp">
+      <Filter>redis\advance\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

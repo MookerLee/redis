@@ -27,15 +27,36 @@ namespace redis {
 
 		};
 	public:
-		exception(int errCode, const std::string& errStr)
+		exception(errorCode errCode, const std::string& errStr)
 			:errCode_(errCode),
 			errStr_(errStr) {}
 
 		virtual const char* what() const noexcept override {
 			return errStr_.c_str();
 		}
+		bool keyNonExist() const
+		{
+			return errCode_ == REPLY_VAL_NONEXIST;
+		}
+		bool valTypeError() const 
+		{
+			return errCode_ == REPLY_VAL_ERROR;
+		}
+		bool sevReplyError() const
+		{
+			return errCode_ == REPLY_ERROR;
+		}
+		bool disconnected() const
+		{
+			return errCode_ == SOCKET_IO_ERROR ||
+				errCode_ == SCOKET_IO_EOF;
+		}
+		bool protoError() const
+		{
+			return errCode_ == PROTOCOL_ERROR;
+		}
 	private:
-		int errCode_;
+		errorCode errCode_;
 		std::string errStr_;
 
 	};

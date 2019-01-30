@@ -1,18 +1,18 @@
 #include "redis/client.hpp"
 
 namespace redis {
-	namespace op {
-		srotedSet::srotedSet(client& cli)
+	namespace container {
+		srotedset::srotedset(client& cli)
 			:cli_(cli)
 		{
 
 		}
-		srotedSet::~srotedSet()
+		srotedset::~srotedset()
 		{
 
 		}
 
-		long long srotedSet::zadd(const std::string& key, 
+		long long srotedset::zadd(const std::string& key, 
 			const std::multimap<long long, std::string>& scoreMembers)
 		{
 			std::list<std::string> cmds{ "ZADD",key };
@@ -25,23 +25,23 @@ namespace redis {
 
 			return cli_.sendListCommand(cmds).asInteger();
 		}
-		long long srotedSet::zcard(const std::string& key)
+		long long srotedset::zcard(const std::string& key)
 		{
 			return cli_.sendSafeCommand("ZCARD", key);
 		}
-		long long srotedSet::zcount(const std::string& key, 
+		long long srotedset::zcount(const std::string& key, 
 			const std::string& min, 
 			const std::string& max)
 		{
 			return cli_.sendSafeCommand("ZCOUNT", key, min, max);
 		}
-		std::string srotedSet::zincrby(const std::string& key, 
+		std::string srotedset::zincrby(const std::string& key, 
 			const std::string& increment, 
 			const std::string& member)
 		{
 			return cli_.sendSafeCommand("ZINCRBY", key, increment, member);
 		}
-		redis::reply srotedSet::zrange(const std::string& key, 
+		redis::reply srotedset::zrange(const std::string& key, 
 			int start, 
 			int stop, 
 			bool withScores /* = true */)
@@ -51,7 +51,7 @@ namespace redis {
 
 			return cli_.sendListCommand(commands);
 		}
-		reply srotedSet::zrangebyscore(const std::string& key,
+		reply srotedset::zrangebyscore(const std::string& key,
 			const std::string& min /* = "-inf" */,
 			const std::string& max /* = "+inf" */,
 			bool withScores /* = true */,
@@ -66,11 +66,11 @@ namespace redis {
 			}		
 			return cli_.sendListCommand(commands);
 		}
-		reply srotedSet::zrank(const std::string& key, const std::string& member)
+		reply srotedset::zrank(const std::string& key, const std::string& member)
 		{
 			return cli_.sendSafeCommand("ZRANK", key, member);
 		}
-		long long srotedSet::zrem(const std::string& key, 
+		long long srotedset::zrem(const std::string& key, 
 			const std::list<std::string>& members)
 		{
 			std::list<std::string> commands{ "ZREM",key };
@@ -78,19 +78,19 @@ namespace redis {
 
 			return cli_.sendListCommand(commands);
 		}
-		long long srotedSet::zremrangebyrank(const std::string& key, 
+		long long srotedset::zremrangebyrank(const std::string& key, 
 			int start /*= 0*/, 
 			int stop /*= -1*/)
 		{
 			return cli_.sendSafeCommand("ZREMRANGEBYRANK", key, start, stop);
 		}
-		long long srotedSet::zremrangebyscore(const std::string& key, 
+		long long srotedset::zremrangebyscore(const std::string& key, 
 			const std::string& min /* = "-inf" */, 
 			const std::string& max /* = "+inf" */)
 		{
 			return cli_.sendSafeCommand("ZREMRANGEBYSCORE", key, min, max);
 		}
-		redis::reply srotedSet::zrevrange(const std::string& key, 
+		redis::reply srotedset::zrevrange(const std::string& key, 
 			int start /*= 0*/, 
 			int stop /*= -1*/, 
 			bool withScores /*= true*/)
@@ -100,7 +100,7 @@ namespace redis {
 			if(withScores) commands.push_back("WITHSCORES");
 			return cli_.sendListCommand(commands);
 		}
-		reply srotedSet::zrevrangebyscore(const std::string& key, 
+		reply srotedset::zrevrangebyscore(const std::string& key, 
 			const std::string& max /* = "+inf" */, 
 			const std::string& min /* = "-inf" */, 
 			bool withScores /* = true */,
@@ -116,16 +116,16 @@ namespace redis {
 			}
 			return cli_.sendListCommand(commands);
 		}
-		reply srotedSet::zrevrank(const std::string& key, const std::string& member)
+		reply srotedset::zrevrank(const std::string& key, const std::string& member)
 		{
 			return cli_.sendSafeCommand("ZREVRANK", key, member);
 		}
-		std::string srotedSet::zscore(const std::string& key, const std::string& member)
+		std::string srotedset::zscore(const std::string& key, const std::string& member)
 		{
 			return cli_.sendSafeCommand("ZSCORE", key, member);
 		}
 
-		long long srotedSet::zunionstore(const std::string& destination,
+		long long srotedset::zunionstore(const std::string& destination,
 			long long numkeys,
 			const std::list<std::string>& keys,
 			const std::list<std::string>& weights /* =  */,
@@ -145,7 +145,7 @@ namespace redis {
 			}
 			return cli_.sendListCommand(commands);
 		}
-		long long srotedSet::zinterstore(const std::string& destination,
+		long long srotedset::zinterstore(const std::string& destination,
 			long long numkeys,
 			const std::list<std::string>& keys,
 			const std::list<std::string>& weights /* =  */,
@@ -166,14 +166,14 @@ namespace redis {
 			return cli_.sendListCommand(commands);
 		}
 
-		reply srotedSet::zscan(const std::string& key, 
+		reply srotedset::zscan(const std::string& key, 
 			int cursor /* = 0 */, 
 			const std::string& matchPattern /* = "*" */, 
 			int count /* = 10 */)
 		{
 			return cli_.sendSafeCommand("ZSCAN", key, cursor, matchPattern, count);
 		}
-		reply srotedSet::zrangebylex(const std::string& key,
+		reply srotedset::zrangebylex(const std::string& key,
 			const std::string& min /* = "-inf" */,
 			const std::string& max /* = "+inf" */,
 			const std::string& limit /* = "" */)
@@ -186,13 +186,13 @@ namespace redis {
 			}
 			return cli_.sendListCommand(commands);
 		}
-		long long srotedSet::zlexcount(const std::string& key, 
+		long long srotedset::zlexcount(const std::string& key, 
 			const std::string& min /* = "-inf" */, 
 			const std::string& max /* = "+inf" */)
 		{
 			return cli_.sendSafeCommand("ZLEXCOUN", key, min, max);
 		}
-		long long srotedSet::zremrangebylex(const std::string& key, 
+		long long srotedset::zremrangebylex(const std::string& key, 
 			const std::string& min /* = "-inf" */, 
 			const std::string& max /* = "+inf" */)
 		{

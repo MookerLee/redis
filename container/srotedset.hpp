@@ -15,11 +15,11 @@ namespace redis {
 	class client;
 	class reply;
 
-	namespace op {
-		class srotedSet {
+	namespace container {
+		class srotedset {
 		public:
-			srotedSet(client& cli);
-			~srotedSet();
+			srotedset(client& cli);
+			~srotedset();
 
 			/**
 			* 将一个或多个 member 元素及其 score 值加入到有序集 key 当中。
@@ -81,7 +81,7 @@ namespace redis {
 			* 返回值:
 			* 指定区间内，带有 score 值(可选)的有序集成员的列表。
 			*/
-			reply srotedSet::zrange(const std::string& key, int start = 0, int stop = -1, bool withScores = true );
+			reply srotedset::zrange(const std::string& key, int start = 0, int stop = -1, bool withScores = true );
 
 			/**
 			* 返回有序集 key 中，所有 score 值介于 min 和 max 之间(包括等于 min 或 max )的成员。有序集成员按 score 值递增(从小到大)次序排列。
@@ -286,7 +286,7 @@ namespace redis {
 };
 
 #if !defined(CORE_ONLY_HEADER)
-#include "impl/sroted_set.hpp"
+#include "impl/srotedset.hpp"
 #endif
 
 #endif

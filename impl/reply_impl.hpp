@@ -68,7 +68,7 @@ namespace redis {
 		}
 		std::string asString() const
 		{
-			if (!isString())
+			if (!isString() && !isStatus() && !isInteger())
 				throw exception(
 					exception::errorCode::REPLY_VAL_ERROR,
 					"not reply string");
