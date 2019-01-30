@@ -11,17 +11,17 @@ namespace redis {
 		{
 
 		}
-		long long hash::hdel(const std::string& key, const std::list<std::string>&  fields)
+		redis::reply hash::hdel(const std::string& key, const std::list<std::string>& fields)
 		{
 			std::list<std::string> commands{ "HDEL", key };
 			commands.insert(commands.end(), fields.begin(), fields.end());
 			return cli_.sendListCommand(commands);
 		}
-		bool hash::hexist(const std::string& key, const std::string& field)
+		redis::reply hash::hexist(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HEXIST", key, field);
 		}
-		std::string hash::hget(const std::string& key, const std::string& field)
+		redis::reply hash::hget(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HGET", key, field);
 		}
@@ -29,11 +29,11 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("HGETALL", key);
 		}
-		long long hash::hincrby(const std::string& key, const std::string& field, long long increment)
+		redis::reply hash::hincrby(const std::string& key, const std::string& field, long long increment)
 		{
 			return cli_.sendSafeCommand("HINCRBY", key, field, increment);
 		}
-		std::string hash::hincrbyfloat(const std::string& key, const std::string& field, double increment)
+		redis::reply hash::hincrbyfloat(const std::string& key, const std::string& field, double increment)
 		{
 			return cli_.sendSafeCommand("HINCRBYFLOAT", key, field, increment);
 		}
@@ -41,7 +41,7 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("HKEYS", key);
 		}
-		long long hash::hlen(const std::string& key)
+		redis::reply hash::hlen(const std::string& key)
 		{
 			return cli_.sendSafeCommand("HLEN", key);
 		}
@@ -62,11 +62,11 @@ namespace redis {
 			}
 			return cli_.sendListCommand(commands);
 		}
-		long long hash::hset(const std::string& key, const std::string& field, const std::string& value)
+		redis::reply hash::hset(const std::string& key, const std::string& field, const std::string& value)
 		{
 			return cli_.sendSafeCommand("HSET", key, field, value);
 		}
-		bool hash::hsetnx(const std::string& key, const std::string& field, const std::string& value)
+		redis::reply hash::hsetnx(const std::string& key, const std::string& field, const std::string& value)
 		{
 			return cli_.sendSafeCommand("HSETNX", key, field, value);
 		}
@@ -78,7 +78,7 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("HSCAN", key, cursor, "MATCH", matchPattern, "COUNT", count);
 		}
-		long long hash::hstrlen(const std::string& key, const std::string& field)
+		redis::reply hash::hstrlen(const std::string& key, const std::string& field)
 		{
 			return cli_.sendSafeCommand("HSTRLEN", key, field);
 		}

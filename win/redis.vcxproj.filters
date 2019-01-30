@@ -2,23 +2,31 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="redis">
-      <UniqueIdentifier>{9d6a1105-5b82-47b1-a468-f3eb2e350132}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="redis\impl">
-      <UniqueIdentifier>{06cadcc2-0a30-4146-8806-dc77032e160f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="redis\container">
-      <UniqueIdentifier>{b85431cd-4d07-41b7-98fb-a1c489c71ee5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="redis\container\impl">
-      <UniqueIdentifier>{5675b8d4-0573-47bf-809e-b08557aa6ade}</UniqueIdentifier>
+      <UniqueIdentifier>{044e9a85-f49b-48c8-b503-36e0caed8bb3}</UniqueIdentifier>
     </Filter>
     <Filter Include="redis\advance">
-      <UniqueIdentifier>{227c75ee-f07c-4899-85a0-921b728f3d03}</UniqueIdentifier>
+      <UniqueIdentifier>{618b0483-1ffd-4ad5-8305-b8433b6aa82c}</UniqueIdentifier>
     </Filter>
     <Filter Include="redis\advance\impl">
-      <UniqueIdentifier>{74ab02ee-d025-417e-bfd5-7dfb2882b1d0}</UniqueIdentifier>
+      <UniqueIdentifier>{0c6e5475-6abf-4664-ade4-90a9fc9631ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="redis\container">
+      <UniqueIdentifier>{d3252efa-e35d-44bc-897e-f88881d0c8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\container\impl">
+      <UniqueIdentifier>{977bb7ba-c8c8-4e12-85c0-e02f5bff3435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\impl">
+      <UniqueIdentifier>{d9124331-0953-4b41-9452-123d4322675c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="redis\win">
+      <UniqueIdentifier>{19bbbc8f-612c-4afe-b09f-8979f44f885f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>redis\win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\client.hpp">
@@ -27,8 +35,65 @@
     <ClInclude Include="..\exception.hpp">
       <Filter>redis</Filter>
     </ClInclude>
+    <ClInclude Include="..\redis.hpp">
+      <Filter>redis</Filter>
+    </ClInclude>
     <ClInclude Include="..\reply.hpp">
       <Filter>redis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\pubsub.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\script.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\server.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\transaction.hpp">
+      <Filter>redis\advance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\pubsub.hpp">
+      <Filter>redis\advance\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\script.hpp">
+      <Filter>redis\advance\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\server.hpp">
+      <Filter>redis\advance\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\advance\impl\transaction.hpp">
+      <Filter>redis\advance\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\hash.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\key.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\list.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\set.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\string.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\hash.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\key.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\list.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\set.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\string.hpp">
+      <Filter>redis\container\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\impl\client.hpp">
       <Filter>redis\impl</Filter>
@@ -37,6 +102,9 @@
       <Filter>redis\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\impl\protocol.hpp">
+      <Filter>redis\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\impl\protocol_sender.hpp">
       <Filter>redis\impl</Filter>
     </ClInclude>
     <ClInclude Include="..\impl\reply.hpp">
@@ -48,64 +116,23 @@
     <ClInclude Include="..\impl\string_convert.hpp">
       <Filter>redis\impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\op\hash.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\key.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\list.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\set.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\string.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\hash.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\key.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\list.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\set.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\string.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\redis.hpp">
-      <Filter>redis</Filter>
-    </ClInclude>
-    <ClInclude Include="..\impl\protocol_sender.hpp">
-      <Filter>redis\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\impl\srotedset.hpp">
-      <Filter>redis\container\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\op\srotedset.hpp">
-      <Filter>redis\container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\advance\server.hpp">
+    <ClInclude Include="..\advance\geo.hpp">
       <Filter>redis\advance</Filter>
     </ClInclude>
-    <ClInclude Include="..\advance\impl\server.hpp">
+    <ClInclude Include="..\advance\impl\geo.hpp">
       <Filter>redis\advance\impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\advance\script.hpp">
+    <ClInclude Include="..\advance\hyperloglog.hpp">
       <Filter>redis\advance</Filter>
     </ClInclude>
-    <ClInclude Include="..\advance\impl\script.hpp">
+    <ClInclude Include="..\advance\impl\hyperloglog.hpp">
       <Filter>redis\advance\impl</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>redis</Filter>
-    </ClCompile>
+    <ClInclude Include="..\container\sortedset.hpp">
+      <Filter>redis\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\container\impl\sortedset.hpp">
+      <Filter>redis\container\impl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

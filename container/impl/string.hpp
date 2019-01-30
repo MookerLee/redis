@@ -13,72 +13,71 @@ namespace redis {
 		{
 		
 		}
-		long long string::append(const std::string& key, const std::string& appStr)
+		reply string::append(const std::string& key, const std::string& str)
 		{
-			return cli_.sendSafeCommand("APPEND", key, appStr).asInteger();
+			return cli_.sendSafeCommand("APPEND", key, str);
 		}
-		long long string::bitcount(const std::string& key, int start /* = 0 */, int end /* = -1 */)
+		reply string::bitcount(const std::string& key, int start /* = 0 */, int end /* = -1 */)
 		{
-			return cli_.sendSafeCommand("BITCOUNT", key, start,end).asInteger();
+			return cli_.sendSafeCommand("BITCOUNT", key, start,end);
 		}
-		long long string::bitop(const std::string& subCmd, const std::string& destkey, const std::list<std::string>& keys)
+		reply string::bitop(const std::string& operation, const std::string& destkey, const std::list<std::string>& keys)
 		{
-			std::list<std::string> cmds{ "BITOP" ,subCmd ,destkey };
-			cmds.insert(cmds.end(), keys.begin(), keys.end());
-			return cli_.sendListCommand(cmds).asInteger();
+			std::list<std::string> commands{ "BITOP" ,operation ,destkey };
+			commands.insert(commands.end(), keys.begin(), keys.end());
+			return cli_.sendListCommand(commands);
 		}
-		long long string::bitopAnd(const std::string& destkey, const std::list<std::string>& keys)
+		reply string::bitopAnd(const std::string& destkey, const std::list<std::string>& keys)
 		{
 			return bitop("AND", destkey, keys);
 		}
-		long long string::bitopOr(const std::string& destkey, const std::list<std::string>& keys)
+		reply string::bitopOr(const std::string& destkey, const std::list<std::string>& keys)
 		{
 			return bitop("OR", destkey, keys);
 		}
-		long long string::bitopXor(const std::string& destkey, const std::list<std::string>& keys)
+		reply string::bitopXor(const std::string& destkey, const std::list<std::string>& keys)
 		{
 			return bitop("XOR", destkey, keys);
 		}
-		long long string::bitopNot(const std::string& destkey,const std::string& key)
+		reply string::bitopNot(const std::string& destkey,const std::string& key)
 		{		
 			return bitop("NOT", destkey, { key });
 		}
-		long long string::decr(const std::string& key)
+		reply string::decr(const std::string& key)
 		{
-			return cli_.sendSafeCommand("DECR", key).asInteger();
+			return cli_.sendSafeCommand("DECR", key);
 		}
-		long long string::decrby(const std::string& key, long long decrement)
+		reply string::decrby(const std::string& key, long long decrement)
 		{
-			return cli_.sendSafeCommand("DECRBY", key, decrement).asInteger();
+			return cli_.sendSafeCommand("DECRBY", key, decrement);
 		}
-		std::string string::get(const std::string& key)
+		reply string::get(const std::string& key)
 		{
-			return cli_.sendSafeCommand("GET", key).asString();
+			return cli_.sendSafeCommand("GET", key);
 		}
-		long long string::getbit(const std::string& key, int offset)
+		reply string::getbit(const std::string& key, int offset)
 		{
-			return cli_.sendSafeCommand("GETBIT", key, offset).asInteger();
+			return cli_.sendSafeCommand("GETBIT", key, offset);
 		}
-		std::string string::getrange(const std::string& key, int start, int end)
+		reply string::getrange(const std::string& key, int start /*= 0*/, int end /*= -1*/)
 		{
-			return cli_.sendSafeCommand("GETRANGE", key, start, end).asString();
+			return cli_.sendSafeCommand("GETRANGE", key, start, end);
 		}
-
-		std::string string::getset(const std::string& key, const std::string& newvalue)
+		reply string::getset(const std::string& key, const std::string& value)
 		{
-			return cli_.sendSafeCommand("GETSET", key, newvalue).asString();
+			return cli_.sendSafeCommand("GETSET", key, value);
 		}
-		long long string::incr(const std::string& key)
+		reply string::incr(const std::string& key)
 		{
-			return cli_.sendSafeCommand("INCR", key).asInteger();
+			return cli_.sendSafeCommand("INCR", key);
 		}
-		long long string::incrby(const std::string& key, long long increment)
+		reply string::incrby(const std::string& key, long long increment)
 		{
-			return cli_.sendSafeCommand("INCRBY", key, increment).asInteger();
+			return cli_.sendSafeCommand("INCRBY", key, increment);
 		}
-		std::string string::incrbyfloat(const std::string& key, double increment)
+		reply string::incrbyfloat(const std::string& key, const std::string& increment)
 		{
-			return cli_.sendSafeCommand("INCRBYFLOAT", key, increment).asString();
+			return cli_.sendSafeCommand("INCRBYFLOAT", key, increment);
 		}
 
 		reply string::mget(const std::list<std::string>& keys)
@@ -87,7 +86,7 @@ namespace redis {
 			commands.insert(commands.end(), keys.begin(), keys.end());
 			return cli_.sendListCommand(commands);
 		}
-		void string::mset(const std::multimap<std::string, std::string>& keyValues)
+		reply string::mset(const std::multimap<std::string,std::string>& keyValues)
 		{
 			std::list<std::string> commands{ "MSET" };
 
@@ -96,10 +95,10 @@ namespace redis {
 				commands.push_back(kv.first);
 				commands.push_back(kv.second);
 			}
-			cli_.sendListCommand(commands);
+			return cli_.sendListCommand(commands);
 		}
 
-		bool string::msetnx(const std::multimap<std::string, std::string>& keyValues)
+		reply string::msetnx(const std::multimap<std::string, std::string>& keyValues)
 		{
 			std::list<std::string> commands{ "MSETNX" };
 
@@ -110,33 +109,33 @@ namespace redis {
 			}
 			return cli_.sendListCommand(commands);
 		}
-		void string::psetex(const std::string& key, time_t milliseconds, const std::string& value)
+		reply string::psetex(const std::string& key, time_t milliseconds, const std::string& value)
 		{
-			cli_.sendSafeCommand("PSETEX", key, milliseconds, value);
+			return cli_.sendSafeCommand("PSETEX", key, milliseconds, value);
 		}
-		void string::set(const std::string& key, const std::string& value)
+		reply string::set(const std::string& key, const std::string& value)
 		{
-			cli_.sendSafeCommand("SET", key, value);
+			return cli_.sendSafeCommand("SET", key, value);
 		}
-		long long string::setbit(const std::string& key, int offset, int bit)
+		reply string::setbit(const std::string& key, int offset, int value)
 		{
-			return cli_.sendSafeCommand("SETBIT", key, offset,bit).asInteger();
+			return cli_.sendSafeCommand("SETBIT", key, offset,value);
 		}
-		void string::setex(const std::string& key, time_t seconds, const std::string& value) 
+		reply string::setex(const std::string& key, time_t seconds, const std::string& value) 
 		{
-			cli_.sendSafeCommand("SETEX", key, seconds, value);
+			return cli_.sendSafeCommand("SETEX", key, seconds, value);
 		}
-		bool string::setnx(const std::string& key, const std::string& value)
+		reply string::setnx(const std::string& key, const std::string& value)
 		{
 			return cli_.sendSafeCommand("SETNX", key, value);
 		}
-		long long string::setrange(const std::string& key, int offset, const std::string& value)
+		reply string::setrange(const std::string& key, int offset, const std::string& value)
 		{
-			return cli_.sendSafeCommand("SETRANGE", key, offset, value).asInteger();
+			return cli_.sendSafeCommand("SETRANGE", key, offset, value);
 		}
-		long long string::strlen(const std::string& key) 
+		reply string::strlen(const std::string& key) 
 		{
-			return cli_.sendSafeCommand("STRLEN", key).asInteger();
+			return cli_.sendSafeCommand("STRLEN", key);
 		}
 	};
 };

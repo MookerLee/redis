@@ -18,6 +18,46 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\advance\geo.hpp" />
+    <ClInclude Include="..\advance\hyperloglog.hpp" />
+    <ClInclude Include="..\advance\impl\geo.hpp" />
+    <ClInclude Include="..\advance\impl\hyperloglog.hpp" />
+    <ClInclude Include="..\advance\impl\pubsub.hpp" />
+    <ClInclude Include="..\advance\impl\script.hpp" />
+    <ClInclude Include="..\advance\impl\server.hpp" />
+    <ClInclude Include="..\advance\impl\transaction.hpp" />
+    <ClInclude Include="..\advance\pubsub.hpp" />
+    <ClInclude Include="..\advance\script.hpp" />
+    <ClInclude Include="..\advance\server.hpp" />
+    <ClInclude Include="..\advance\transaction.hpp" />
+    <ClInclude Include="..\client.hpp" />
+    <ClInclude Include="..\container\hash.hpp" />
+    <ClInclude Include="..\container\impl\hash.hpp" />
+    <ClInclude Include="..\container\impl\key.hpp" />
+    <ClInclude Include="..\container\impl\list.hpp" />
+    <ClInclude Include="..\container\impl\set.hpp" />
+    <ClInclude Include="..\container\impl\sortedset.hpp" />
+    <ClInclude Include="..\container\impl\string.hpp" />
+    <ClInclude Include="..\container\key.hpp" />
+    <ClInclude Include="..\container\list.hpp" />
+    <ClInclude Include="..\container\set.hpp" />
+    <ClInclude Include="..\container\sortedset.hpp" />
+    <ClInclude Include="..\container\string.hpp" />
+    <ClInclude Include="..\exception.hpp" />
+    <ClInclude Include="..\impl\client.hpp" />
+    <ClInclude Include="..\impl\client_impl.hpp" />
+    <ClInclude Include="..\impl\protocol.hpp" />
+    <ClInclude Include="..\impl\protocol_sender.hpp" />
+    <ClInclude Include="..\impl\reply.hpp" />
+    <ClInclude Include="..\impl\reply_impl.hpp" />
+    <ClInclude Include="..\impl\string_convert.hpp" />
+    <ClInclude Include="..\redis.hpp" />
+    <ClInclude Include="..\reply.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93DC45C4-F121-4702-B22C-92B94EB2D411}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,38 +185,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\advance\impl\script.hpp" />
-    <ClInclude Include="..\advance\impl\server.hpp" />
-    <ClInclude Include="..\advance\script.hpp" />
-    <ClInclude Include="..\advance\server.hpp" />
-    <ClInclude Include="..\client.hpp" />
-    <ClInclude Include="..\exception.hpp" />
-    <ClInclude Include="..\impl\client.hpp" />
-    <ClInclude Include="..\impl\client_impl.hpp" />
-    <ClInclude Include="..\impl\protocol.hpp" />
-    <ClInclude Include="..\impl\protocol_sender.hpp" />
-    <ClInclude Include="..\impl\reply.hpp" />
-    <ClInclude Include="..\impl\reply_impl.hpp" />
-    <ClInclude Include="..\impl\string_convert.hpp" />
-    <ClInclude Include="..\op\hash.hpp" />
-    <ClInclude Include="..\op\impl\hash.hpp" />
-    <ClInclude Include="..\op\impl\key.hpp" />
-    <ClInclude Include="..\op\impl\list.hpp" />
-    <ClInclude Include="..\op\impl\set.hpp" />
-    <ClInclude Include="..\op\impl\srotedset.hpp" />
-    <ClInclude Include="..\op\impl\string.hpp" />
-    <ClInclude Include="..\op\key.hpp" />
-    <ClInclude Include="..\op\list.hpp" />
-    <ClInclude Include="..\op\set.hpp" />
-    <ClInclude Include="..\op\srotedset.hpp" />
-    <ClInclude Include="..\op\string.hpp" />
-    <ClInclude Include="..\redis.hpp" />
-    <ClInclude Include="..\reply.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -29,7 +29,7 @@ int main()
 		//redis::op::hash h(cli);
 		//h.hvals("gg");
 
-		redis::container::srotedset st(cli);
+		redis::container::sortedset st(cli);
 		st.zscan("kk");
 	}
 	catch (const std::exception& e)

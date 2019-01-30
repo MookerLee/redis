@@ -13,7 +13,7 @@ namespace redis {
 		{
 
 		}
-		long long key::del(const std::list<std::string>& keys)
+		redis::reply key::del(const std::list<std::string>& keys)
 		{
 			std::list<std::string> commands{"DEL"};
 			commands.insert(commands.end(), keys.begin(), keys.end());
@@ -25,15 +25,15 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("DUMP", k);
 		}
-		bool key::exists(const std::string& k)
+		redis::reply key::exists(const std::string& k)
 		{
 			return cli_.sendSafeCommand("EXISTS",k);
 		}
-		bool key::expire(const std::string& k, int second)
+		reply key::expire(const std::string& k, time_t second)
 		{
 			return cli_.sendSafeCommand("EXPIRE", k, second);
 		}
-		bool key::expireat(const std::string& k, time_t timestamp)
+		redis::reply key::expireat(const std::string& k, time_t timestamp)
 		{
 			return cli_.sendSafeCommand("EXPIREAT", k, timestamp);
 		}
@@ -45,61 +45,66 @@ namespace redis {
 		{
 			return keys("*");
 		}
-		void key::migrate(const std::string& host, int port, const std::string& k, int db, time_t milliseconds)
+		redis::reply key::migrate(const std::string& host, int port, const std::string& k, int db, time_t milliseconds)
 		{
-			cli_.sendSafeCommand("MIGRATE", host, port, k, db, milliseconds);
+			return cli_.sendSafeCommand("MIGRATE", host, port, k, db, milliseconds);
 		}
-		bool key::move(const std::string& k, int db)
+		redis::reply key::move(const std::string& k, int db)
 		{
 			return cli_.sendSafeCommand("MOVE", k, db);
 		}
-		long long key::objectRefcount(const std::string& k)
+		redis::reply key::objectRefcount(const std::string& k)
 		{
 			return object("REFCOUNT", k);
 		}
-		long long key::objectIdleTime(const std::string& k)
+		redis::reply key::objectIdleTime(const std::string& k)
 		{
 			return object("IDLETIME", k);
 		}
-		std::string key::objectEncoding(const std::string& k)
+		redis::reply key::objectEncoding(const std::string& k)
 		{
 			return object("ENCODING", k);
 		}
-		bool key::persist(const std::string& k)
+		redis::reply key::persist(const std::string& k)
 		{
 			return cli_.sendSafeCommand("PERSIST", k);
 		}
-		bool key::pexpire(const std::string& k, time_t milliseconds)
+		redis::reply key::pexpire(const std::string& k, time_t milliseconds)
 		{
 			return cli_.sendSafeCommand("PEXPIRE", k, milliseconds);
 		}
-		bool key::pexpireat(const std::string& k, time_t millisecondsTimestamp)
+		redis::reply key::pexpireat(const std::string& k, time_t millisecondsTimestamp)
 		{
 			return cli_.sendSafeCommand("PEXPIREAT", k, millisecondsTimestamp);
 		}
-		long long key::ttl(const std::string& k)
+		redis::reply key::ttl(const std::string& k)
 		{
 			return cli_.sendSafeCommand("TTL", k);
 		}
-		long long key::pttl(const std::string& k)
+		redis::reply key::pttl(const std::string& k)
 		{
 			return cli_.sendSafeCommand("PTTL", k);
 		}
-		std::string key::randomkey()
-		{
+		redis::reply key::randomkey()
+{
 			return cli_.sendSafeCommand("RANDOMKEY");
 		}
-		void key::rename(const std::string& k, const std::string& newkey)
+		redis::reply key::rename(const std::string& k, const std::string& newkey)
 		{
-			cli_.sendSafeCommand("RENAME", k, newkey);
+			return cli_.sendSafeCommand("RENAME", k, newkey);
 		}
-		bool key::renamenx(const std::string& k, const std::string& newkey)
+		redis::reply key::renamenx(const std::string& k, const std::string& newkey)
 		{
 			return cli_.sendSafeCommand("RENAMENX", k, newkey);
 		}
-		void key::restore(const std::string& k, time_t ttl, const std::string& serializedValue)
+		redis::reply key::restore(const std::string& k, time_t ttl, const std::string& serializedValue, bool replace /*= false*/)
 		{
-			cli_.sendSafeCommand("RESTORE", k, ttl, serializedValue);
+			std::list<std::string> commands{ "RESTORE",k };
+			commands.push_back(std::to_string(ttl));
+			commands.push_back(serializedValue);
+			if (replace) commands.push_back("REPLACE");
+			
+			return cli_.sendListCommand(commands);
 		}
 		reply key::sort(const std::string& k, const std::string& pattern)
 		{
@@ -113,9 +118,9 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("SCAN", cursor, "MATCH", matchPattern, "COUNT", count);
 		}
-		reply key::object(const std::string& subcmd, const std::string& k)
+		reply key::object(const std::string& subcommand, const std::string& k)
 		{
-			return cli_.sendSafeCommand("OBJECT", subcmd, k);
+			return cli_.sendSafeCommand("OBJECT", subcommand, k);
 		}
 	};
 };
