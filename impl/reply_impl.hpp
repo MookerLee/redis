@@ -17,168 +17,97 @@ namespace redis {
 	{
 	public:
 
-		enum replyType
+		enum class replyType
 		{
-			REPLY_UNKNOW,
-			REPLY_STATUS,		//状态回复
-			REPLY_ERROR,		//错误回复
-			REPLY_INTEGER,		//整数回复
-			REPLY_BULK,			//批量回复
-			REPLY_MULTI_BULK,	//多条批量回复
+			REPLY_NIL,			//nil
+			REPLY_STATUS,		//status
+			REPLY_ERROR,		//error
+			REPLY_INTEGER,		//int
+			REPLY_BULK,			//string
+			REPLY_MULTI_BULK,	//array
 		};
 
 		typedef std::shared_ptr<replyImpl> replyImplPtr;
 
+		replyImpl()
+			:type_(replyType::REPLY_NIL)
+		{
+
+		}
 		replyImpl(replyType type, const std::string& val) 
-			:replyType_(type),
-			replyVal_(val)
+			:type_(type),
+			val_(val)
+		{
+
+		}
+		replyImpl(std::vector<replyImplPtr> elements)
+			:type_(replyType::REPLY_MULTI_BULK),
+			elements_(elements)
 		{
 
 		}
 			
 
-		bool isArray() const noexcept 
+		bool isarray() const noexcept 
 		{
-			return replyType_ == replyType::REPLY_MULTI_BULK;
+			return type_ == replyType::REPLY_MULTI_BULK;
 		}
 
-		bool isInteger() const noexcept
+		bool isinteger() const noexcept
 		{
-			return replyType_ == replyType::REPLY_INTEGER;
+			return type_ == replyType::REPLY_INTEGER;
 		}
 
-		bool isString() const noexcept
+		bool isstring() const noexcept
 		{
-			return replyType_ == replyType::REPLY_BULK;
+			return type_ == replyType::REPLY_BULK;
 		}
 
-		bool empty() const noexcept
+		bool iserror() const noexcept
 		{
-			return !(isArray() || isInteger() || isString());
+			return type_ == replyType::REPLY_ERROR;
+		}
+		bool isnil() const noexcept
+		{
+			return type_ == replyType::REPLY_NIL;
+		}
+		bool isstatus() const noexcept
+		{
+			return type_ == replyType::REPLY_STATUS;
 		}
 
-		long long asInteger() const
+		long long integer() const
 		{
-			if (!isInteger())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply integer");
-
-			return std::stoll(replyVal_);
+			if (!isinteger())
+				throw exception(exception::errorCode::REPLY_VAL_ERROR,"not reply an integer");
+			return std::stoll(val_);
 		}
-		std::string asString() const
+		std::string string() const
 		{
-			if (!isString() && !isStatus() && !isInteger())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply string");
-
-			return replyVal_;
+			if (!isstring() && !isstatus() && !iserror())
+				throw exception(exception::errorCode::REPLY_VAL_ERROR,"not reply a string");
+			return val_;
 		}
-		std::vector<replyImplPtr> asArray() const
+		std::vector<replyImplPtr> array() const
 		{
-			if (!isArray())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply array");
-
-			return replyImplArray_;
-		}
-
-		void pushImpl(replyImplPtr impl)
-		{
-			if (!isArray())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"push replyImpl fail,not array");
-
-			replyImplArray_.push_back(impl);
+			if (!isarray())
+				throw exception(exception::errorCode::REPLY_VAL_ERROR,"not reply an array");
+			return elements_;
 		}
 
 		
 		bool ok() const
 		{
-			if (isStatus() == false)
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-
-			return replyVal_ == "OK";
+			if (!isstatus())
+				throw exception(exception::errorCode::REPLY_VAL_ERROR,"not reply a status !");
+			return val_ == "OK";
 		}
 
-		bool error() const 
-		{
-			return replyType_ == replyType::REPLY_ERROR;
-		}
-
-		std::string errorString() const
-		{
-			if (replyType_ != replyType::REPLY_ERROR)
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply error !");
-
-			return replyVal_;
-		}
-		bool isStatus() const noexcept
-		{
-			return replyType_ == replyType::REPLY_STATUS;
-		}
-		bool typeSet() const 
-		{
-			if(!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-
-			return replyVal_ == "set";
-		}
-		bool typeList() const 
-		{
-			if (!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-			return replyVal_ == "list";
-		}
-		bool typeHash()const
-		{
-			if (!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-			return replyVal_ == "hash";
-		}
-		bool typeNone()const
-		{
-			if (!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-			return replyVal_ == "none";
-		}
-		bool typeString()const
-		{
-			if (!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-			return replyVal_ == "string";
-		}
-		bool typeZset()const
-		{
-			if (!isStatus())
-				throw exception(
-					exception::errorCode::REPLY_VAL_ERROR,
-					"not reply status !");
-			return replyVal_ == "zset";
-		}
 	private:
 
-		replyType replyType_;
-		std::string replyVal_;
-
-		std::vector<replyImplPtr> replyImplArray_;
+		replyType type_;
+		std::string val_;
+		std::vector<replyImplPtr> elements_;
 	};
 };
 

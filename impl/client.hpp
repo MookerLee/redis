@@ -28,11 +28,11 @@ namespace redis
 	}
 	std::string client::echo(const std::string& message)
 	{
-		return sendSafeCommand("ECHO", message).asString();
+		return sendSafeCommand("ECHO", message).string();
 	}
 	bool client::ping()
 	{
-		return sendSafeCommand("PING").asString() == "PONG";
+		return sendSafeCommand("PING").string() == "PONG";
 	}
 	void client::select(int db)
 	{

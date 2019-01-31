@@ -16,6 +16,8 @@
 #include "redis/impl/reply_impl.hpp"
 #include "redis/impl/string_convert.hpp"
 
+#define SPILTSTRING std::string("\r\n")
+
 namespace redis {
 
 	class replyImpl;
@@ -37,57 +39,40 @@ namespace redis {
 
 	public:
 
-		void feedBuffer(const std::string& buf)
+		static std::string findFirstSpiltString(const std::string& buffer, size_t offset)
 		{
-			buffer_.append(buf.c_str(), buf.length());
+			size_t pos = buffer.find_first_of(SPILTSTRING, offset);
+			if (pos == std::string::npos) return "";
+			return buffer.substr(offset, pos - offset);
 		}
-
-		void clearBuffer()
-		{
-			currentPos_ = 0;
-			buffer_.clear();
-		}
-
-		std::string currentPosString()
-		{
-			size_t findPos = buffer_.find_first_of(spiltString_, currentPos_);
-			if (findPos == std::string::npos) return "";
-			return buffer_.substr(currentPos_, findPos - currentPos_);
-		}
-		std::shared_ptr<replyImpl> buildStringReply()
+		static std::shared_ptr<replyImpl> buildStringReply(const std::string& buffer,size_t& offset)
 		{			
-			std::string curStr = currentPosString();
+			std::string curStr = findFirstSpiltString(buffer,offset);
 
 			protocol::replyType type = getReplyType(curStr);
 			if (type != protocol::replyType::REPLY_BULK) return nullptr;
 
 			long long dataSize = std::stoll(curStr.substr(1));
-			currentPos_ += curStr.length() + spiltString_.length();
+			offset += curStr.length() + SPILTSTRING.length();
 
 			if (dataSize == -1)
 			{
-				throw exception(exception::errorCode::REPLY_VAL_NONEXIST, "reply val non-exist");
+				return std::make_shared<replyImpl>();
 			}
 
-			long long leftBufferSize = buffer_.length() - currentPos_;
-
-			if (leftBufferSize < dataSize + spiltString_.size())
-			{
-				currentPos_ = 0;
-				return nullptr;
-			}
-
+			//数据不够或者过长
+			if ((buffer.length() - offset) != (dataSize + SPILTSTRING.length())) return nullptr;
+			
 			std::shared_ptr<replyImpl> impl(
 				std::make_shared<replyImpl>(
-					transformReplyType(type), buffer_.substr(currentPos_, dataSize)));
-
-			currentPos_ += dataSize + spiltString_.size();
+					replyImpl::replyType::REPLY_BULK, buffer.substr(offset, dataSize)));
+			offset += dataSize + SPILTSTRING.length();
 		
 			return impl;
 		}
-		std::shared_ptr<replyImpl> buildSingleReply()
+		static std::shared_ptr<replyImpl> buildSingleReply(const std::string& buffer,size_t& offset)
 		{
-			std::string curStr = currentPosString();
+			std::string curStr = findFirstSpiltString(buffer, offset);
 			protocol::replyType type = getReplyType(curStr);
 
 			switch (type)
@@ -96,8 +81,14 @@ namespace redis {
 			case redis::protocol::REPLY_ERROR:
 			case redis::protocol::REPLY_INTEGER:
 			{
-				currentPos_ += curStr.length() + spiltString_.length();
-				return std::make_shared<replyImpl>(transformReplyType(type), curStr.substr(1));
+				offset += curStr.length() + SPILTSTRING.length();
+
+				replyImpl::replyType replytype;
+				if (type == redis::protocol::REPLY_STATUS) replytype = replyImpl::replyType::REPLY_STATUS;
+				else if (type == redis::protocol::REPLY_ERROR) replytype = replyImpl::replyType::REPLY_ERROR;
+				else if (type == redis::protocol::REPLY_INTEGER) replytype = replyImpl::replyType::REPLY_INTEGER;
+
+				return std::make_shared<replyImpl>(replytype, curStr.substr(1));
 			}
 				break;
 			default:
@@ -105,9 +96,9 @@ namespace redis {
 			}
 		}
 
-		std::shared_ptr<replyImpl> buildArrayReply()
+		static std::shared_ptr<replyImpl> buildArrayReply(const std::string& buffer, size_t& offset)
 		{
-			std::string curStr = currentPosString();
+			std::string curStr = findFirstSpiltString(buffer,offset);
 			protocol::replyType type = getReplyType(curStr);
 
 			if (type != protocol::replyType::REPLY_MULTI_BULK) return nullptr;
@@ -123,62 +114,63 @@ namespace redis {
 			/************************************************************************/
 
 			long long arraySize = std::stoll(curStr.substr(1));
-			currentPos_ += curStr.length() + spiltString_.length();
+			offset += curStr.length() + SPILTSTRING.length();
 
-			std::shared_ptr<replyImpl> retImpl(std::make_shared<replyImpl>(transformReplyType(type), ""));
+			std::vector<std::shared_ptr<replyImpl>> impls;
 
 			for (int i = 0; i < arraySize; ++i)
 			{
-				std::shared_ptr<replyImpl> subImpl;
-				subImpl = buildSingleReply();
-				if (subImpl)
+				std::shared_ptr<replyImpl> impl;
+				impl = buildSingleReply(buffer, offset);
+				if (impl)
 				{
-					retImpl->pushImpl(subImpl);
+					impls.push_back(impl);
 					continue;
 				}
-				subImpl = buildStringReply();
-				if (subImpl)
+				impl = buildStringReply(buffer, offset);
+				if (impl)
 				{
-					retImpl->pushImpl(subImpl);
+					impls.push_back(impl);
 					continue;
 				}
-				subImpl = buildArrayReply();
-				if (subImpl)
+				impl = buildArrayReply(buffer,offset);
+				if (impl)
 				{
-					retImpl->pushImpl(subImpl);
+					impls.push_back(impl);
 					continue;
 				}
 			}
-			if (retImpl->asArray().size() != arraySize) return nullptr;
+			std::shared_ptr<replyImpl> retImpl(std::make_shared<replyImpl>(impls));
+			if (retImpl->array().size() != arraySize) return nullptr;
 			return retImpl;
 		}
 
-		std::shared_ptr<replyImpl> biludReplyImpl()
+		static std::shared_ptr<replyImpl> biludReplyImpl(const std::string& buffer)
 		{	
-			currentPos_ = 0;
 			// 如果最后不是\r\n 一定没有读完
-			if (buffer_.find_last_of(spiltString_) == std::string::npos) return nullptr;
+			if (buffer.find_last_of(SPILTSTRING) == std::string::npos) return nullptr;
 
+			size_t offset = 0;
 			std::shared_ptr<replyImpl> retImpl;
 
-			retImpl = buildStringReply();
+			retImpl = buildStringReply(buffer, offset);
 			if (retImpl) return retImpl;
 
-			retImpl = buildSingleReply();
+			retImpl = buildSingleReply(buffer, offset);
 			if (retImpl) return retImpl;
 
-			retImpl = buildArrayReply();
+			retImpl = buildArrayReply(buffer, offset);
 			if (retImpl) return retImpl;
 
 			return nullptr;
 		}
 
 
-		protocol::replyType getReplyType(const std::string& buf)
+		static protocol::replyType getReplyType(const std::string& str)
 		{
-			if (buf.empty()) return protocol::replyType::REPLY_UNKNOW;
+			if (str.empty()) return protocol::replyType::REPLY_UNKNOW;
 
-			switch (buf[0])
+			switch (str[0])
 			{
 			case '+': return protocol::replyType::REPLY_STATUS;
 			case '-': return protocol::replyType::REPLY_ERROR;
@@ -191,32 +183,6 @@ namespace redis {
 
 			throw exception(exception::errorCode::PROTOCOL_ERROR, "protocol deserialize fail !");
 		}
-
-	private:
-		
-
-		static replyImpl::replyType transformReplyType(protocol::replyType type)
-		{
-			switch (type)
-			{
-
-			case protocol::REPLY_UNKNOW: return replyImpl::REPLY_UNKNOW;
-			case protocol::REPLY_STATUS: return replyImpl::REPLY_STATUS;
-			case protocol::REPLY_ERROR:return replyImpl::REPLY_ERROR;
-			case protocol::REPLY_INTEGER:return replyImpl::REPLY_INTEGER;
-			case protocol::REPLY_BULK:return replyImpl::REPLY_BULK;
-			case protocol::REPLY_MULTI_BULK:return replyImpl::REPLY_MULTI_BULK;
-
-			default:
-				return replyImpl::REPLY_UNKNOW;
-			}
-		}
-		
-	private:
-
-		std::string buffer_;
-		size_t currentPos_ = 0;
-		const std::string spiltString_ = "\r\n";
 	};
 };
 #include <redis/impl/protocol_sender.hpp>

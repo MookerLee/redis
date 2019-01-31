@@ -21,29 +21,20 @@ namespace redis {
 
 		~reply();
 
-		bool isArray() const noexcept;
-		bool isInteger() const noexcept;
-		bool isString() const noexcept;
-		bool isStatus() const noexcept;
+		bool isarray() const noexcept;
+		bool isinteger() const noexcept;
+		bool isstring() const noexcept;
+		bool isstatus() const noexcept;
+		bool isnil() const noexcept;
+		bool iserror() const noexcept;
 
-		long long asInteger() const;
-		std::string asString() const;
+		long long integer() const;
+		std::string string() const;
+		std::vector<reply> array() const;
 
-		std::vector<reply> asArray() const;
-
-		bool empty() const noexcept;
 
 		bool ok() const;
 
-		bool typeSet() const;
-		bool typeString() const;
-		bool typeNone() const;
-
-		bool typeList() const;
-		bool typeZset() const;
-		bool typeHash() const;
-
-		operator bool();
 		operator long long();
 		operator std::string();
 

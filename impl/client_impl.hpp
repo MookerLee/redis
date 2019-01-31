@@ -160,18 +160,13 @@ private:
 			if (sendBytes == bytes) break;
 		}
 
+		std::string readBuffer;
 		std::shared_ptr<replyImpl> impl;
-		do
+		do 
 		{
-			protocol_.feedBuffer(read());
-
-		} while ((impl = protocol_.biludReplyImpl()) == nullptr);
-
-		protocol_.clearBuffer();
-
-		if (impl->error())
-			throw exception(exception::errorCode::REPLY_ERROR, impl->errorString());
-
+			readBuffer.append(read());
+			impl = protocol_.biludReplyImpl(readBuffer);
+		} while (!impl);
 		return impl;
 
 	}

@@ -18,33 +18,35 @@ namespace redis {
 	{
 		
 	}
-	bool reply::isArray() const noexcept
+	bool reply::iserror() const noexcept
 	{
-		return impl_->isArray();
+		return impl_->iserror();
 	}
-	bool reply::isInteger() const noexcept
+	bool reply::isarray() const noexcept
 	{
-		return impl_->isInteger();
+		return impl_->isarray();
 	}
-	bool reply::isString() const noexcept
+	bool reply::isinteger() const noexcept
 	{
-		return impl_->isString();
+		return impl_->isinteger();
 	}
-	long long reply::asInteger() const
+	bool reply::isstring() const noexcept
 	{
-		return impl_->asInteger();
+		return impl_->isstring();
 	}
-	std::string reply::asString() const
+	long long reply::integer() const
 	{
-		return impl_->asString();
+		return impl_->integer();
 	}
-	std::vector<reply> reply::asArray() const
+	std::string reply::string() const
 	{
-		impl_->pushImpl(nullptr);
-
+		return impl_->string();
+	}
+	std::vector<reply> reply::array() const
+	{
 		std::vector<reply> replyArray;
 
-		std::vector<std::shared_ptr<replyImpl>> responseImplArray = impl_->asArray();
+		std::vector<std::shared_ptr<replyImpl>> responseImplArray = impl_->array();
 		for (auto it = responseImplArray.begin(); it != responseImplArray.end(); ++it)
 		{
 			replyArray.emplace_back(*it);
@@ -52,52 +54,24 @@ namespace redis {
 
 		return replyArray;
 	}
-	bool reply::empty() const noexcept
+	bool reply::isnil() const noexcept
 	{
-		return impl_->empty();
-	}
-	reply::operator bool()
-	{
-		return asInteger() == RESPONSE_SUCCESS;
+		return impl_->isnil();
 	}
 	reply::operator std::string()
 	{
-		return asString();
+		return string();
 	}
 	reply::operator long long()
 	{
-		return asInteger();
+		return integer();
 	}
 	bool reply::ok() const
 	{
 		return impl_->ok();
 	}
-	bool reply::isStatus() const noexcept
+	bool reply::isstatus() const noexcept
 	{
-		return impl_->isStatus();
-	}
-	bool reply::typeSet() const
-	{
-		return impl_->typeSet();
-	}
-	bool reply::typeList()const
-	{
-		return impl_->typeList();
-	}
-	bool reply::typeNone()const
-	{
-		return impl_->typeNone();
-	}
-	bool reply::typeString()const
-	{
-		return impl_->typeString();
-	}
-	bool reply::typeZset()const
-	{
-		return impl_->typeZset();
-	}
-	bool reply::typeHash()const
-	{
-		return impl_->typeHash();
+		return impl_->isstatus();
 	}
 };
