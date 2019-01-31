@@ -20,9 +20,6 @@ namespace redis {
 			SCOKET_IO_EOF,	
 
 			PROTOCOL_ERROR,		//协议解析错误
-
-			REPLY_ERROR,		//服务器返回ERROR
-			REPLY_VAL_NONEXIST, //访问的KEY不存在
 			REPLY_VAL_ERROR,	//取值错误
 
 		};
@@ -34,17 +31,9 @@ namespace redis {
 		virtual const char* what() const noexcept override {
 			return errStr_.c_str();
 		}
-		bool keyNonExist() const
-		{
-			return errCode_ == REPLY_VAL_NONEXIST;
-		}
 		bool valTypeError() const 
 		{
 			return errCode_ == REPLY_VAL_ERROR;
-		}
-		bool sevReplyError() const
-		{
-			return errCode_ == REPLY_ERROR;
 		}
 		bool disconnected() const
 		{
