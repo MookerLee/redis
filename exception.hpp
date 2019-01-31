@@ -1,6 +1,6 @@
 
-#ifndef _CXXREDIS_EXCEPTION_HPP_
-#define _CXXREDIS_EXCEPTION_HPP_
+#ifndef _REDIS_EXCEPTION_HPP_
+#define _REDIS_EXCEPTION_HPP_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once

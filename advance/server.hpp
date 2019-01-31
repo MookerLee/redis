@@ -143,7 +143,7 @@ namespace redis {
 			* ENGLISH
 			* https://redis.io/commands/info
 			*/
-			reply info();
+			reply info(bool all = false);
 
 			/**
 			* жпнд

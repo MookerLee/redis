@@ -1,7 +1,7 @@
 
 
-#ifndef _CXXREDIS_CLIENT_HPP_
-#define _CXXREDIS_CLIENT_HPP_
+#ifndef _REDIS_CLIENT_HPP_
+#define _REDIS_CLIENT_HPP_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once

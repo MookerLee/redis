@@ -71,9 +71,13 @@ namespace redis {
 		{
 			return cli_.sendSafeCommand("FLUSHDB");
 		}
-		reply server::info()
+		redis::reply server::info(bool all /*= false*/)
 		{
-			return cli_.sendSafeCommand("INFO");
+			std::list<std::string> commands{ "INFO" };
+			if (all) commands.push_back("ALL");
+			else commands.push_back("DEFAULT");
+
+			return cli_.sendListCommand(commands);
 		}
 		reply server::lastsave()
 		{
